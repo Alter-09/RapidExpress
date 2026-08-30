@@ -37,7 +37,7 @@ CREATE TABLE `conductor` (
     `nombre_completo` VARCHAR(100) NOT NULL,
     `tipo_licencia` ENUM('A','B','C','D','E') NOT NULL,
     `num_contacto` VARCHAR(20) NOT NULL,
-    `estado` ENUM('Activo','De_Vacaciones','Inactivo') NOT NULL DEFAULT 'Activo',
+    `estado` ENUM('Activo','De_Vacaciones','Inactivo','En_Ruta') NOT NULL DEFAULT 'Activo',
     `vehiculo_asignado` VARCHAR(10) DEFAULT NULL,
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

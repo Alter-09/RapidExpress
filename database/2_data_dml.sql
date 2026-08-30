@@ -18,11 +18,11 @@ INSERT INTO `vehiculo` (`placa`, `marca`, `modelo`, `anio_fabricacion`, `capacid
 ('ABC-129', 'Mercedes-Benz', 'Atego 1725', 2020, 10000.00, 'Disponible'),
 ('ABC-130', 'Mercedes-Benz', 'Atego 1725', 2019, 10000.00, 'Disponible'),
 ('ABC-131', 'Scania', 'P 360', 2022, 16000.00, 'Disponible'),
-('ABC-132', 'Scania', 'P 360', 2021, 16000.00, 'En_Ruta'),
+('ABC-132', 'Scania', 'P 360', 2021, 16000.00, 'Disponible'),
 ('ABC-133', 'International', 'MV 607', 2020, 8000.00, 'Disponible'),
 ('ABC-134', 'International', 'MV 607', 2019, 8000.00, 'Disponible'),
 ('ABC-135', 'Kenworth', 'T680', 2022, 20000.00, 'Disponible'),
-('ABC-136', 'Kenworth', 'T680', 2021, 20000.00, 'En_Ruta'),
+('ABC-136', 'Kenworth', 'T680', 2022, 20000.00, 'Disponible'),
 ('ABC-137', 'Peterbilt', '579', 2020, 22000.00, 'Disponible'),
 ('ABC-138', 'Peterbilt', '579', 2019, 22000.00, 'Disponible'),
 ('ABC-139', 'Freightliner', 'Cascadia', 2022, 19000.00, 'Disponible'),
@@ -41,7 +41,7 @@ INSERT INTO `vehiculo` (`placa`, `marca`, `modelo`, `anio_fabricacion`, `capacid
 INSERT INTO `conductor` (`num_identificacion`, `nombre_completo`, `tipo_licencia`, `num_contacto`, `estado`, `vehiculo_asignado`) VALUES
 ('1000000001', 'Carlos Andrés Rodríguez', 'C', '3001112233', 'Activo', 'ABC-123'),
 ('1000000002', 'María Fernanda Gómez', 'C', '3001112244', 'Activo', 'ABC-124'),
-('1000000003', 'Juan Carlos Martínez', 'E', '3001112255', 'Activo', 'ABC-125'),
+('1000000003', 'Juan Carlos Martínez', 'E', '3001112255', 'En_Ruta', 'ABC-125'),
 ('1000000004', 'Ana Lucía Hernández', 'C', '3001112266', 'Activo', 'ABC-126'),
 ('1000000005', 'Luis Alberto Torres', 'E', '3001112277', 'Activo', 'ABC-127'),
 ('1000000006', 'Patricia Elena Vargas', 'D', '3001112288', 'De_Vacaciones', 'ABC-128'),
@@ -60,7 +60,7 @@ INSERT INTO `conductor` (`num_identificacion`, `nombre_completo`, `tipo_licencia
 ('1000000019', 'Diego Armando Cruz', 'C', '3001112411', 'Activo', 'ABC-141'),
 ('1000000020', 'Paula Andrea Mendoza', 'C', '3001112422', 'Activo', 'ABC-142'),
 ('1000000021', 'Santiago José Vargas', 'E', '3001112433', 'Activo', 'ABC-143'),
-('1000000022', 'Valentina Ríos', 'E', '3001112444', 'Activo', 'ABC-144'),
+('1000000022', 'Valentina Ríos', 'E', '3001112444', 'En_Ruta', 'ABC-144'),
 ('1000000023', 'Sebastián Gutiérrez', 'C', '3001112455', 'Activo', 'ABC-145'),
 ('1000000024', 'Isabela Córdoba', 'C', '3001112466', 'Activo', 'ABC-146'),
 ('1000000025', 'Alejandro Peña', 'E', '3001112477', 'Activo', 'ABC-147');
@@ -98,10 +98,40 @@ INSERT INTO `paquete` (`id_seguimiento`, `descripcion`, `peso_kg`, `dimensiones`
 ('PKG-20240117-007', 'Aceites esenciales', 2.00, '15x10x8', 'Zona Industrial, Cali', 'Calle 12 #15-20, Popayán', 'Aromaterapia', '3102001053', 'Zona Industrial, Cali', 'Spa Popayán', '3102001054', 'Calle 12 #15-20, Popayán', 'En_Bodega'),
 ('PKG-20240117-008', 'Cámaras de seguridad', 6.00, '25x20x15', 'Av. 68 #40-25, Bogotá', 'Carrera 27 #45-10, Manizales', 'Seguridad Total', '3102001055', 'Av. 68 #40-25, Bogotá', 'Oficinas Manizales', '3102001056', 'Carrera 27 #45-10, Manizales', 'En_Bodega'),
 ('PKG-20240117-009', 'Suplementos proteicos', 5.00, '20x15x10', 'Calle 85 #15-30, Bogotá', 'Av. 30 #20-15, Ibagué', 'FitNutrition', '3102001057', 'Calle 85 #15-30, Bogotá', 'Gimnasio Ibagué', '3102001058', 'Av. 30 #20-15, Ibagué', 'En_Bodega'),
-('PKG-20240117-010', 'Drone profesional', 3.00, '30x30x15', 'Zona Franca, Barranquilla', 'Calle 40 #10-25, Santa Marta', 'DronTech', '3102001059', 'Zona Franca, Barranquilla', 'Fotografía Santa Marta', '3102001060', 'Calle 40 #10-25, Santa Marta', 'En_Bodega');
+('PKG-20240117-010', 'Drone profesional', 3.00, '30x30x15', 'Zona Franca, Barranquilla', 'Calle 40 #10-25, Santa Marta', 'DronTech', '3102001059', 'Zona Franca, Barranquilla', 'Fotografía Santa Marta', '3102001060', 'Calle 40 #10-25, Santa Marta', 'En_Bodega'),
+('PKG-20240118-001', 'Componentes electrónicos', 1.20, '15x15x10', 'Calle 100 #15-20, Bogotá', 'Av. 80 #12-45, Barranquilla', 'TechImport Ltda', '3102001005', 'Calle 100 #15-20, Bogotá', 'ElectroBarranquilla', '3102001006', 'Av. 80 #12-45, Barranquilla', 'En_Bodega'),
+('PKG-20240118-002', 'Material de papelería', 10.50, '40x30x20', 'Av. El Dorado #68-95, Bogotá', 'Carrera 15 #30-25, Bucaramanga', 'OficinaTotal', '3102001031', 'Av. El Dorado #68-95, Bogotá', 'Droguería Central', '3102001008', 'Carrera 15 #30-25, Bucaramanga', 'En_Bodega'),
+('PKG-20240118-003', 'Repuestos de motor', 35.00, '60x50x40', 'Zona Franca, Cartagena', 'Calle 50 #20-10, Pereira', 'AutoPartes Medellín', '3102001009', 'Zona Franca, Cartagena', 'Taller Pereira', '3102001010', 'Calle 50 #20-10, Pereira', 'En_Bodega'),
+('PKG-20240118-004', 'Insumos médicos', 4.50, '25x20x15', 'Calle 26 #59-15, Bogotá', 'Calle 30 #45-10, Cali', 'FarmaDistribuidor', '3102001007', 'Calle 26 #59-15, Bogotá', 'Tienda Sport Cali', '3102001004', 'Calle 30 #45-10, Cali', 'En_Bodega'),
+('PKG-20240118-005', 'Artículos de cuero', 8.20, '35x25x20', 'Av. Américas #45-20, Medellín', 'Av. Circunvalar #25-30, Cúcuta', 'Calzado Activo', '3102001041', 'Av. Américas #45-20, Medellín', 'Colegio San José', '3102001012', 'Av. Circunvalar #25-30, Cúcuta', 'En_Bodega'),
+('PKG-20240118-006', 'Calzado escolar', 12.00, '45x35x25', 'Carrera 7 #32-16, Bogotá', 'Calle 12 #15-20, Popayán', 'Editorial Santillana', '3102001011', 'Carrera 7 #32-16, Bogotá', 'Supermercado Popayán', '3102001014', 'Calle 12 #15-20, Popayán', 'En_Bodega'),
+('PKG-20240118-007', 'Productos de aseo', 20.00, '50x40x30', 'Zona Industrial, Cali', 'Carrera 27 #45-10, Manizales', 'Alimentos del Valle', '3102001013', 'Zona Industrial, Cali', 'Hogar Manizales', '3102001016', 'Carrera 27 #45-10, Manizales', 'En_Bodega'),
+('PKG-20240118-008', 'Café especial', 15.00, '30x20x15', 'Av. 68 #40-25, Bogotá', 'Av. 30 #20-15, Ibagué', 'Café Colombia', '3102001027', 'Av. 68 #40-25, Bogotá', 'Salón Ibagué', '3102001018', 'Av. 30 #20-15, Ibagué', 'En_Bodega'),
+('PKG-20240118-009', 'Herramientas manuales', 18.50, '40x25x20', 'Calle 85 #15-30, Bogotá', 'Calle 40 #10-25, Santa Marta', 'Herramientas del Caribe', '3102001019', 'Calle 85 #15-30, Bogotá', 'Ferretería Santa Marta', '3102001020', 'Calle 40 #10-25, Santa Marta', 'En_Bodega'),
+('PKG-20240118-010', 'Textiles de algodón', 22.00, '55x45x35', 'Zona Franca, Barranquilla', 'Carrera 50 #25-30, Medellín', 'Hogar Dulce Hogar', '3102001049', 'Zona Franca, Barranquilla', 'Abogados Asociados', '3102001002', 'Carrera 50 #25-30, Medellín', 'En_Bodega'),
+('PKG-20240119-001', 'Suplementos alimenticios', 5.00, '20x15x10', 'Calle 100 #15-20, Bogotá', 'Calle 30 #45-10, Cali', 'FitNutrition', '3102001057', 'Calle 100 #15-20, Bogotá', 'Farmacia Cali', '3102001024', 'Calle 30 #45-10, Cali', 'En_Bodega'),
+('PKG-20240119-002', 'Juguetes plásticos', 14.00, '50x40x30', 'Av. El Dorado #68-95, Bogotá', 'Av. 80 #12-45, Barranquilla', 'Juguetes y Más', '3102001025', 'Av. El Dorado #68-95, Bogotá', 'Tienda Juguetes BAQ', '3102001026', 'Av. 80 #12-45, Barranquilla', 'En_Bodega'),
+('PKG-20240119-003', 'Libros escolares', 18.00, '35x30x25', 'Zona Franca, Cartagena', 'Carrera 15 #30-25, Bucaramanga', 'Editorial Santillana', '3102001011', 'Zona Franca, Cartagena', 'Academia Bucaramanga', '3102001048', 'Carrera 15 #30-25, Bucaramanga', 'En_Bodega'),
+('PKG-20240119-004', 'Vajilla de cerámica', 25.00, '40x40x30', 'Calle 26 #59-15, Bogotá', 'Calle 50 #20-10, Pereira', 'Muebles Modernos', '3102001015', 'Calle 26 #59-15, Bogotá', 'Ferretería Pereira', '3102001030', 'Calle 50 #20-10, Pereira', 'En_Bodega'),
+('PKG-20240119-005', 'Perfumes importados', 3.00, '25x20x15', 'Av. Américas #45-20, Medellín', 'Av. Circunvalar #25-30, Cúcuta', 'Fragancias Finas', '3102001037', 'Av. Américas #45-20, Medellín', 'Electrónica Cúcuta', '3102001052', 'Av. Circunvalar #25-30, Cúcuta', 'En_Bodega'),
+('PKG-20240119-006', 'Aceites de motor', 40.00, '60x40x30', 'Carrera 7 #32-16, Bogotá', 'Calle 12 #15-20, Popayán', 'AutoPartes Medellín', '3102001009', 'Carrera 7 #32-16, Bogotá', 'Spa Popayán', '3102001054', 'Calle 12 #15-20, Popayán', 'En_Bodega'),
+('PKG-20240119-007', 'Productos de belleza', 8.50, '30x25x20', 'Zona Industrial, Cali', 'Carrera 27 #45-10, Manizales', 'Belleza Natural', '3102001017', 'Zona Industrial, Cali', 'Ciclo Manizales', '3102001036', 'Carrera 27 #45-10, Manizales', 'En_Bodega'),
+('PKG-20240119-008', 'Cámaras fotográficas', 6.00, '25x20x15', 'Av. 68 #40-25, Bogotá', 'Av. 30 #20-15, Ibagué', 'DronTech', '3102001059', 'Av. 68 #40-25, Bogotá', 'Perfumería Ibagué', '3102001038', 'Av. 30 #20-15, Ibagué', 'En_Bodega'),
+('PKG-20240119-009', 'Herramientas eléctricas', 32.00, '50x35x25', 'Calle 85 #15-30, Bogotá', 'Calle 40 #10-25, Santa Marta', 'Herramientas del Caribe', '3102001019', 'Calle 85 #15-30, Bogotá', 'Fotografía Santa Marta', '3102001060', 'Calle 40 #10-25, Santa Marta', 'En_Bodega'),
+('PKG-20240119-010', 'Bicicleta de montaña', 18.00, '120x80x30', 'Zona Franca, Barranquilla', 'Carrera 50 #25-30, Medellín', 'BiciUrbana', '3102001035', 'Zona Franca, Barranquilla', 'Deportes Medellín', '3102001042', 'Carrera 50 #25-30, Medellín', 'En_Bodega'),
+('PKG-20240120-001', 'Alimentos congelados', 50.00, '80x60x50', 'Calle 100 #15-20, Bogotá', 'Calle 30 #45-10, Cali', 'Alimentos del Valle', '3102001013', 'Calle 100 #15-20, Bogotá', 'Supermercado Cali', '3102001044', 'Calle 30 #45-10, Cali', 'En_Bodega'),
+('PKG-20240120-002', 'Lámparas de oficina', 12.00, '40x40x35', 'Av. El Dorado #68-95, Bogotá', 'Av. 80 #12-45, Barranquilla', 'Muebles Modernos', '3102001015', 'Av. El Dorado #68-95, Bogotá', 'PetShop Barranquilla', '3102001046', 'Av. 80 #12-45, Barranquilla', 'En_Bodega'),
+('PKG-20240120-003', 'Material de empaque', 15.00, '50x50x40', 'Zona Franca, Cartagena', 'Carrera 15 #30-25, Bucaramanga', 'OficinaTotal', '3102001031', 'Zona Franca, Cartagena', 'Droguería Central', '3102001008', 'Carrera 15 #30-25, Bucaramanga', 'En_Bodega'),
+('PKG-20240120-004', 'Repuestos sanitarios', 28.00, '45x35x30', 'Calle 26 #59-15, Bogotá', 'Calle 50 #20-10, Pereira', 'ConstruMateriales', '3102001029', 'Calle 26 #59-15, Bogotá', 'Taller Pereira', '3102001010', 'Calle 50 #20-10, Pereira', 'En_Bodega'),
+('PKG-20240120-005', 'Artículos deportivos', 10.00, '35x30x25', 'Av. Américas #45-20, Medellín', 'Av. Circunvalar #25-30, Cúcuta', 'Deportes Colombia', '3102001003', 'Av. Américas #45-20, Medellín', 'Colegio San José', '3102001012', 'Av. Circunvalar #25-30, Cúcuta', 'En_Bodega'),
+('PKG-20240120-006', 'Medicamentos genéricos', 6.00, '25x20x15', 'Carrera 7 #32-16, Bogotá', 'Calle 12 #15-20, Popayán', 'FarmaDistribuidor', '3102001007', 'Carrera 7 #32-16, Bogotá', 'Supermercado Popayán', '3102001014', 'Calle 12 #15-20, Popayán', 'En_Bodega'),
+('PKG-20240120-007', 'Alimentos para mascotas', 25.00, '50x35x25', 'Zona Industrial, Cali', 'Carrera 27 #45-10, Manizales', 'Mundo Mascotas', '3102001045', 'Zona Industrial, Cali', 'Hogar Manizales', '3102001016', 'Carrera 27 #45-10, Manizales', 'En_Bodega'),
+('PKG-20240120-008', 'Cables y conectores', 8.50, '30x20x15', 'Av. 68 #40-25, Bogotá', 'Av. 30 #20-15, Ibagué', 'CompuZone', '3102001039', 'Av. 68 #40-25, Bogotá', 'Salón Ibagué', '3102001018', 'Av. 30 #20-15, Ibagué', 'En_Bodega'),
+('PKG-20240120-009', 'Instrumentos de medición', 4.00, '20x15x10', 'Calle 85 #15-30, Bogotá', 'Calle 40 #10-25, Santa Marta', 'TechImport Ltda', '3102001005', 'Calle 85 #15-30, Bogotá', 'Ferretería Santa Marta', '3102001020', 'Calle 40 #10-25, Santa Marta', 'En_Bodega'),
+('PKG-20240120-010', 'Suplementos vitamínicos', 3.50, '20x15x10', 'Zona Franca, Barranquilla', 'Carrera 50 #25-30, Medellín', 'VitaSuplementos', '3102001023', 'Zona Franca, Barranquilla', 'Bebé Feliz Medellín', '3102001022', 'Carrera 50 #25-30, Medellín', 'En_Bodega');
 
 -- ============================================================
--- RUTAS (10 records)
+-- RUTAS (20 records)
 -- ============================================================
 INSERT INTO `ruta` (`id_ruta`, `fecha`, `vehiculo_placa`, `conductor_id`, `estado`) VALUES
 (1, '2024-01-15', 'ABC-125', '1000000003', 'En_Curso'),
@@ -113,7 +143,17 @@ INSERT INTO `ruta` (`id_ruta`, `fecha`, `vehiculo_placa`, `conductor_id`, `estad
 (7, '2024-01-18', 'ABC-126', '1000000004', 'Planificada'),
 (8, '2024-01-18', 'ABC-127', '1000000005', 'Planificada'),
 (9, '2024-01-19', 'ABC-129', '1000000007', 'Planificada'),
-(10, '2024-01-19', 'ABC-130', '1000000008', 'Planificada');
+(10, '2024-01-19', 'ABC-130', '1000000008', 'Planificada'),
+(11, '2024-01-20', 'ABC-131', '1000000009', 'Planificada'),
+(12, '2024-01-20', 'ABC-133', '1000000011', 'Planificada'),
+(13, '2024-01-21', 'ABC-134', '1000000012', 'Planificada'),
+(14, '2024-01-21', 'ABC-135', '1000000013', 'Planificada'),
+(15, '2024-01-22', 'ABC-137', '1000000015', 'Planificada'),
+(16, '2024-01-22', 'ABC-138', '1000000016', 'Planificada'),
+(17, '2024-01-23', 'ABC-139', '1000000017', 'Planificada'),
+(18, '2024-01-23', 'ABC-141', '1000000019', 'Planificada'),
+(19, '2024-01-24', 'ABC-142', '1000000020', 'Planificada'),
+(20, '2024-01-24', 'ABC-143', '1000000021', 'Planificada');
 
 -- ============================================================
 -- RUTA_PAQUETE (assign packages to routes)
@@ -158,10 +198,47 @@ INSERT INTO `ruta_paquete` (`ruta_id`, `paquete_id`, `estado_paquete`, `orden_en
 -- Ruta 9 (ABC-129, 2024-01-19) - 3 packages
 (9, 'PKG-20240117-009', 'Asignado', 1),
 (9, 'PKG-20240117-010', 'Asignado', 2),
-(9, 'PKG-20240115-001', 'Asignado', 3),
+(9, 'PKG-20240118-001', 'Asignado', 3),
 -- Ruta 10 (ABC-130, 2024-01-19) - 2 packages
-(10, 'PKG-20240115-002', 'Asignado', 1),
-(10, 'PKG-20240115-003', 'Asignado', 2);
+(10, 'PKG-20240118-002', 'Asignado', 1),
+(10, 'PKG-20240118-003', 'Asignado', 2),
+-- Ruta 11 (ABC-131, 2024-01-20) - 3 packages
+(11, 'PKG-20240118-004', 'Asignado', 1),
+(11, 'PKG-20240118-005', 'Asignado', 2),
+(11, 'PKG-20240118-006', 'Asignado', 3),
+-- Ruta 12 (ABC-133, 2024-01-20) - 3 packages
+(12, 'PKG-20240118-007', 'Asignado', 1),
+(12, 'PKG-20240118-008', 'Asignado', 2),
+(12, 'PKG-20240118-009', 'Asignado', 3),
+-- Ruta 13 (ABC-134, 2024-01-21) - 3 packages
+(13, 'PKG-20240118-010', 'Asignado', 1),
+(13, 'PKG-20240119-001', 'Asignado', 2),
+(13, 'PKG-20240119-002', 'Asignado', 3),
+-- Ruta 14 (ABC-135, 2024-01-21) - 3 packages
+(14, 'PKG-20240119-003', 'Asignado', 1),
+(14, 'PKG-20240119-004', 'Asignado', 2),
+(14, 'PKG-20240119-005', 'Asignado', 3),
+-- Ruta 15 (ABC-137, 2024-01-22) - 3 packages
+(15, 'PKG-20240119-006', 'Asignado', 1),
+(15, 'PKG-20240119-007', 'Asignado', 2),
+(15, 'PKG-20240119-008', 'Asignado', 3),
+-- Ruta 16 (ABC-138, 2024-01-22) - 3 packages
+(16, 'PKG-20240119-009', 'Asignado', 1),
+(16, 'PKG-20240119-010', 'Asignado', 2),
+(16, 'PKG-20240120-001', 'Asignado', 3),
+-- Ruta 17 (ABC-139, 2024-01-23) - 3 packages
+(17, 'PKG-20240120-002', 'Asignado', 1),
+(17, 'PKG-20240120-003', 'Asignado', 2),
+(17, 'PKG-20240120-004', 'Asignado', 3),
+-- Ruta 18 (ABC-141, 2024-01-23) - 3 packages
+(18, 'PKG-20240120-005', 'Asignado', 1),
+(18, 'PKG-20240120-006', 'Asignado', 2),
+(18, 'PKG-20240120-007', 'Asignado', 3),
+-- Ruta 19 (ABC-142, 2024-01-24) - 2 packages
+(19, 'PKG-20240120-008', 'Asignado', 1),
+(19, 'PKG-20240120-009', 'Asignado', 2),
+-- Ruta 20 (ABC-143, 2024-01-24) - 1 package
+(20, 'PKG-20240120-010', 'Asignado', 1);
 
 -- Update package states to match route assignments
 UPDATE `paquete` SET `estado` = 'Asignado_Ruta' WHERE `id_seguimiento` IN (
@@ -170,7 +247,13 @@ UPDATE `paquete` SET `estado` = 'Asignado_Ruta' WHERE `id_seguimiento` IN (
     'PKG-20240116-001','PKG-20240116-002','PKG-20240116-003','PKG-20240116-004','PKG-20240116-005',
     'PKG-20240116-006','PKG-20240116-007','PKG-20240116-008','PKG-20240116-009','PKG-20240116-010',
     'PKG-20240117-001','PKG-20240117-002','PKG-20240117-003','PKG-20240117-004','PKG-20240117-005',
-    'PKG-20240117-006','PKG-20240117-007','PKG-20240117-008','PKG-20240117-009','PKG-20240117-010'
+    'PKG-20240117-006','PKG-20240117-007','PKG-20240117-008','PKG-20240117-009','PKG-20240117-010',
+    'PKG-20240118-001','PKG-20240118-002','PKG-20240118-003','PKG-20240118-004','PKG-20240118-005',
+    'PKG-20240118-006','PKG-20240118-007','PKG-20240118-008','PKG-20240118-009','PKG-20240118-010',
+    'PKG-20240119-001','PKG-20240119-002','PKG-20240119-003','PKG-20240119-004','PKG-20240119-005',
+    'PKG-20240119-006','PKG-20240119-007','PKG-20240119-008','PKG-20240119-009','PKG-20240119-010',
+    'PKG-20240120-001','PKG-20240120-002','PKG-20240120-003','PKG-20240120-004','PKG-20240120-005',
+    'PKG-20240120-006','PKG-20240120-007','PKG-20240120-008','PKG-20240120-009','PKG-20240120-010'
 );
 
 UPDATE `paquete` SET `estado` = 'En_Transito' WHERE `id_seguimiento` IN (
