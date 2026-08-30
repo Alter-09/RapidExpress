@@ -30,7 +30,7 @@ Complete data dictionary for the RapidExpress Fleet Management System database. 
 | `nombre_completo` | VARCHAR(100) | NOT NULL | Full legal name |
 | `tipo_licencia` | ENUM | NOT NULL | License class: `A`, `B`, `C`, `D`, `E` |
 | `num_contacto` | VARCHAR(20) | NOT NULL | Phone number |
-| `estado` | ENUM | NOT NULL, DEFAULT 'Activo' | Status: `Activo`, `De_Vacaciones`, `Inactivo` |
+| `estado` | ENUM | NOT NULL, DEFAULT 'Activo' | Status: `Activo`, `De_Vacaciones`, `Inactivo`, `En_Ruta` |
 | `vehiculo_asignado` | VARCHAR(10) | FK, UNIQUE, NULLABLE | Assigned vehicle plate (1:1 relationship) |
 | `created_at` | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Record creation timestamp |
 | `updated_at` | TIMESTAMP | NOT NULL, DEFAULT CURRENT_TIMESTAMP ON UPDATE | Last update timestamp |
@@ -194,6 +194,7 @@ Current vehicle state with assigned driver and activity metrics.
 - `Activo` — Available for assignment
 - `De_Vacaciones` — On leave
 - `Inactivo` — Inactive/terminated
+- `En_Ruta` — Currently driving on an active route
 
 ### `conductor.tipo_licencia`
 - `A` — Motorcycle
