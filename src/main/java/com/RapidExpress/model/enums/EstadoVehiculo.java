@@ -16,11 +16,20 @@ public enum EstadoVehiculo {
     }
 
     public static EstadoVehiculo fromString(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException("El estado del vehículo no puede ser nulo o vacío");
+        }
+        
         for (EstadoVehiculo estado : EstadoVehiculo.values()) {
             if (estado.descripcion.equalsIgnoreCase(value)) {
                 return estado;
             }
         }
         throw new IllegalArgumentException("Estado de vehículo inválido: " + value);
+    }
+
+    @Override
+    public String toString() {
+        return descripcion;
     }
 }
