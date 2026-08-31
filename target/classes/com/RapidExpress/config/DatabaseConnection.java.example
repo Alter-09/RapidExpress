@@ -3,12 +3,16 @@ package com.RapidExpress.config;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Plantilla de ejemplo para la configuración de conexión a MySQL.
  * Copie este archivo como 'DatabaseConnection.java' y configure sus credenciales locales/remotas.
  */
 public class DatabaseConnection {
+
+    private static final Logger LOGGER = Logger.getLogger(DatabaseConnection.class.getName());
 
     private static final String URL = "jdbc:mysql://<HOST>:<PORT>/RAPIDD?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static final String USER = "<DB_USER>";
@@ -19,8 +23,8 @@ public class DatabaseConnection {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            System.err.println("Error: Driver JDBC de MySQL no encontrado en el classpath.");
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Driver JDBC de MySQL no encontrado en el classpath.", e);
+            throw new ExceptionInInitializerError("Error: Driver JDBC de MySQL no encontrado en el classpath: " + e.getMessage());
         }
     }
 
@@ -39,20 +43,20 @@ public class DatabaseConnection {
                     connection.close();
                 }
             } catch (SQLException e) {
-                System.err.println("Error al cerrar la conexión: " + e.getMessage());
+                LOGGER.log(Level.WARNING, "Error al cerrar la conexión: " + e.getMessage(), e);
             }
         }
     }
 
     public static boolean testConnection() {
-        System.out.println("Intentando conectar a: " + URL + " con usuario: " + USER + "...");
+        LOGGER.info(() -> "Intentando conectar a: " + URL + " con usuario: " + USER + "...");
         try (Connection conn = getConnection()) {
             if (conn != null && !conn.isClosed()) {
-                System.out.println("Conexión exitosa a la base de datos MySQL [RAPIDD].");
+                LOGGER.info("Conexión exitosa a la base de datos MySQL [RAPIDD].");
                 return true;
             }
         } catch (SQLException e) {
-            System.err.println("Fallo al conectar con la base de datos: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Fallo al conectar con la base de datos: " + e.getMessage(), e);
         }
         return false;
     }
