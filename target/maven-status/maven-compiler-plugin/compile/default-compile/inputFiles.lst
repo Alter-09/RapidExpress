@@ -1,31 +1,61 @@
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\config\DatabaseConnection.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\config\package-info.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\controller\package-info.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\AuditoriaDAO.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\ConductorDAO.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\MantenimientoDAO.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\package-info.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\PaqueteDAO.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\RutaDAO.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\RutaPaqueteDAO.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\dao\VehiculoDAO.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\exception\package-info.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\Main.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\entity\Auditoria.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\entity\Conductor.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\entity\Mantenimiento.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\entity\Paquete.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\entity\Ruta.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\entity\RutaPaquete.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\entity\Vehiculo.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\enums\EstadoConductor.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\enums\EstadoPaquete.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\enums\EstadoRuta.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\enums\EstadoRutaPaquete.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\enums\EstadoVehiculo.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\enums\TipoLicencia.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\enums\TipoMantenimiento.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\model\package-info.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\service\package-info.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\util\package-info.java
-C:\Users\eljua\Desktop\CODING\CAMPUS\RAPPIDEXPRESS\src\main\java\com\RapidExpress\view\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\config\DatabaseConnection.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\config\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\ConductorController.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\MantenimientoController.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\MenuAction.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\MenuRunner.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\PaqueteController.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\ReporteController.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\RutaController.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\controller\VehiculoController.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\AuditoriaDAO.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\ConductorDAO.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\MantenimientoDAO.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\PaqueteDAO.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\RutaDAO.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\RutaPaqueteDAO.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\VehiculoDAO.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\CapacidadExcedidaException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\EntidadDuplicadaException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\EntidadNoEncontradaException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\EstadoInvalidoException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\RapidExpressException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\ValidacionException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\Main.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\entity\Auditoria.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\entity\Conductor.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\entity\Mantenimiento.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\entity\Paquete.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\entity\Ruta.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\entity\RutaPaquete.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\entity\Vehiculo.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\enums\EstadoConductor.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\enums\EstadoPaquete.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\enums\EstadoRuta.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\enums\EstadoRutaPaquete.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\enums\EstadoVehiculo.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\enums\TipoLicencia.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\enums\TipoMantenimiento.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\model\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\AuditoriaService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\ConductorService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\MantenimientoService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\PaqueteService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\ReporteService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\RutaService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\VehiculoService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\util\FileLogUtil.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\util\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\ConductorView.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\ConsoleUtil.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\MainMenuView.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\MantenimientoView.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\PaqueteView.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\ReporteView.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\RutaView.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\VehiculoView.java

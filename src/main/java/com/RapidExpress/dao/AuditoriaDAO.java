@@ -1,5 +1,7 @@
 package com.RapidExpress.dao;
 
+import com.RapidExpress.config.DatabaseConnection;
+import com.RapidExpress.model.entity.Auditoria;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
