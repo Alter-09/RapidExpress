@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.RapidExpress.config.DatabaseConnection;
-import com.RapidExpress.model.entity.Auditoria;
-
 public class AuditoriaDAO {
 
     /**

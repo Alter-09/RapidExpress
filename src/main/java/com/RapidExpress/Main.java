@@ -40,3 +40,4 @@ public class Main {
         ConsoleUtil.printInfo("Sistema finalizado. Hasta luego!");
     }
 }
+
