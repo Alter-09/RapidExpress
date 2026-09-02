@@ -3,12 +3,16 @@ package com.RapidExpress.view;
 import com.RapidExpress.model.entity.Mantenimiento;
 import com.RapidExpress.model.entity.Vehiculo;
 import com.RapidExpress.model.enums.TipoMantenimiento;
+import com.RapidExpress.util.DataValidator;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Vista de consola para la gestión de mantenimientos mecánicos y revisiones.
+ * Muestra ejemplos representativos y valida datos según database/README.md.
+ */
 public final class MantenimientoView {
 
     private MantenimientoView() {}
@@ -29,20 +33,33 @@ public final class MantenimientoView {
     public static int readMenuOption() { return ConsoleUtil.readMenuOption(); }
 
     public static Mantenimiento readNewMantenimientoData(List<Vehiculo> vehiculos) {
-        ConsoleUtil.printSubHeader("Datos del mantenimiento");
+        ConsoleUtil.printSubHeader("DATOS DEL MANTENIMIENTO");
         if (vehiculos.isEmpty()) {
-            ConsoleUtil.printError("No hay vehiculos registrados.");
+            ConsoleUtil.printError("No hay vehículos registrados para programar mantenimiento.");
             return null;
         }
+
         VehiculoView.showVehiculoList(vehiculos);
-        String placa = ConsoleUtil.readRequiredString("Placa del vehiculo").toUpperCase();
-        LocalDate fecha = ConsoleUtil.readDate("Fecha");
-        TipoMantenimiento tipo = ConsoleUtil.readEnum(TipoMantenimiento.class, "Tipo de mantenimiento:");
-        String desc = ConsoleUtil.readRequiredString("Descripcion");
-        BigDecimal costo = ConsoleUtil.readBigDecimal("Costo ($)");
-        String kmStr = ConsoleUtil.readString("Kilometraje (vacio si no aplica)");
-        Integer km = kmStr.isEmpty() ? null : Integer.parseInt(kmStr);
-        String proveedor = ConsoleUtil.readString("Proveedor (vacio si no aplica)");
+        ConsoleUtil.printInfo("Formato de datos aceptados: Placa (ej: ABC-123), Fecha (dd/MM/yyyy), Costo > 0 COP (ej: 450000.00)");
+
+        String placa = ConsoleUtil.readValidatedString("Placa del vehículo", "ABC-123", DataValidator::validarPlaca);
+        LocalDate fecha = ConsoleUtil.readDate("Fecha de realización", "15/06/2023");
+        TipoMantenimiento tipo = ConsoleUtil.readEnum(TipoMantenimiento.class, "Seleccione el tipo de mantenimiento:");
+        String desc = ConsoleUtil.readRequiredString("Descripción del trabajo realizado", "Cambio de aceite y filtros");
+        BigDecimal costo = ConsoleUtil.readPositiveBigDecimal("Costo del servicio en COP", "450000.00");
+
+        String kmStr = ConsoleUtil.readString("Kilometraje del vehículo [opcional] (ej: 150000, o ENTER si no aplica)");
+        Integer km = null;
+        if (!kmStr.isEmpty()) {
+            try {
+                km = DataValidator.validarKilometraje(Integer.parseInt(kmStr));
+            } catch (Exception e) {
+                ConsoleUtil.printError(e.getMessage() + ". Se registrará sin kilometraje.");
+                km = null;
+            }
+        }
+
+        String proveedor = ConsoleUtil.readString("Proveedor o taller [opcional] (ej: Chevrolet Servicio Autorizado)");
         return new Mantenimiento(null, placa, fecha, tipo, desc, costo, km,
                 proveedor.isEmpty() ? null : proveedor);
     }
@@ -52,15 +69,15 @@ public final class MantenimientoView {
     }
 
     public static LocalDate readFecha(String prompt) {
-        return ConsoleUtil.readDate(prompt);
+        return ConsoleUtil.readDate(prompt, "15/06/2023");
     }
 
     public static void showMantenimientoDetail(Mantenimiento m) {
         System.out.println("ID:          " + m.getIdMantenimiento());
-        System.out.println("Vehiculo:    " + m.getVehiculoPlaca());
+        System.out.println("Vehículo:    " + m.getVehiculoPlaca());
         System.out.println("Fecha:       " + m.getFecha());
         System.out.println("Tipo:        " + m.getTipo());
-        System.out.println("Descripcion: " + m.getDescripcion());
+        System.out.println("Descripción: " + m.getDescripcion());
         System.out.println("Costo:       $" + m.getCosto());
         System.out.println("Kilometraje: " + (m.getKilometraje() != null ? m.getKilometraje() : "N/A"));
         System.out.println("Proveedor:   " + (m.getProveedor() != null ? m.getProveedor() : "N/A"));
@@ -74,11 +91,11 @@ public final class MantenimientoView {
             rows[i] = new String[]{String.valueOf(m.getIdMantenimiento()), m.getVehiculoPlaca(),
                     m.getFecha().toString(), m.getTipo().getTipo(), "$" + m.getCosto(), m.getProveedor() != null ? m.getProveedor() : "-"};
         }
-        ConsoleUtil.printTable(new String[]{"ID", "Vehiculo", "Fecha", "Tipo", "Costo", "Proveedor"}, rows);
+        ConsoleUtil.printTable(new String[]{"ID", "Vehículo", "Fecha", "Tipo", "Costo", "Proveedor"}, rows);
     }
 
     public static void showMantenimientosByVehiculo(List<Mantenimiento> mantenimientos, String placa) {
-        ConsoleUtil.printInfo("Mantenimientos del vehiculo " + placa + ":");
+        ConsoleUtil.printInfo("Mantenimientos del vehículo " + placa + ":");
         showMantenimientoList(mantenimientos);
     }
 
@@ -102,7 +119,7 @@ public final class MantenimientoView {
     }
 
     public static void showMantenimientosRecientes(List<Mantenimiento> mantenimientos) {
-        ConsoleUtil.printInfo("Mantenimientos de los ultimos 6 meses:");
+        ConsoleUtil.printInfo("Mantenimientos de los últimos 6 meses:");
         showMantenimientoList(mantenimientos);
     }
 

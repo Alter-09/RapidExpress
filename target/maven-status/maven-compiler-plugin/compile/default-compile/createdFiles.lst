@@ -4,6 +4,8 @@ com\RapidExpress\controller\PaqueteController.class
 com\RapidExpress\model\enums\EstadoConductor.class
 com\RapidExpress\model\enums\TipoMantenimiento.class
 com\RapidExpress\model\entity\Paquete.class
+com\RapidExpress\exception\RangoInvalidoException.class
+com\RapidExpress\view\ConsoleUtil$StringValidator.class
 com\RapidExpress\view\VehiculoView.class
 com\RapidExpress\dao\VehiculoDAO.class
 com\RapidExpress\model\enums\TipoLicencia.class
@@ -28,6 +30,7 @@ com\RapidExpress\service\RutaService.class
 com\RapidExpress\dao\package-info.class
 com\RapidExpress\model\entity\Mantenimiento.class
 com\RapidExpress\exception\ValidacionException.class
+com\RapidExpress\exception\FormatoInvalidoException.class
 com\RapidExpress\service\ReporteService.class
 com\RapidExpress\model\package-info.class
 com\RapidExpress\config\DatabaseConnection.class
@@ -46,17 +49,20 @@ com\RapidExpress\model\enums\EstadoRuta.class
 com\RapidExpress\Main.class
 com\RapidExpress\model\entity\Ruta.class
 com\RapidExpress\view\ConsoleUtil.class
+com\RapidExpress\exception\DatoInvalidoException.class
 com\RapidExpress\controller\MantenimientoController.class
 com\RapidExpress\service\RutaService$1.class
 com\RapidExpress\dao\ConductorDAO.class
 com\RapidExpress\controller\RutaController.class
 com\RapidExpress\service\MantenimientoService.class
 com\RapidExpress\view\PaqueteView.class
+com\RapidExpress\exception\DatoRequeridoException.class
 com\RapidExpress\model\enums\EstadoRutaPaquete.class
 com\RapidExpress\model\entity\Vehiculo.class
 com\RapidExpress\exception\CapacidadExcedidaException.class
 com\RapidExpress\model\entity\Conductor$Builder.class
 com\RapidExpress\model\entity\RutaPaquete$Builder.class
+com\RapidExpress\util\DataValidator.class
 com\RapidExpress\model\entity\Ruta$Builder.class
 com\RapidExpress\service\AuditoriaService.class
 com\RapidExpress\util\package-info.class

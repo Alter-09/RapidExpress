@@ -3,9 +3,14 @@ package com.RapidExpress.view;
 import com.RapidExpress.model.entity.Conductor;
 import com.RapidExpress.model.enums.EstadoConductor;
 import com.RapidExpress.model.enums.TipoLicencia;
+import com.RapidExpress.util.DataValidator;
 
 import java.util.List;
 
+/**
+ * Vista de consola para la gestión de conductores.
+ * Muestra ejemplos representativos y valida datos según database/README.md.
+ */
 public final class ConductorView {
 
     private ConductorView() {}
@@ -29,37 +34,49 @@ public final class ConductorView {
     public static int readMenuOption() { return ConsoleUtil.readMenuOption(); }
 
     public static String readIdentificacion(String prompt) {
-        return ConsoleUtil.readRequiredString(prompt);
+        return ConsoleUtil.readValidatedString(prompt, "1000000001", DataValidator::validarIdentificacionConductor);
     }
 
     public static Conductor readNewConductorData() {
-        ConsoleUtil.printSubHeader("Datos del nuevo conductor");
-        String id = readIdentificacion("Numero de identificacion");
-        String nombre = ConsoleUtil.readRequiredString("Nombre completo");
-        TipoLicencia lic = ConsoleUtil.readEnum(TipoLicencia.class, "Tipo de licencia:");
-        String contacto = ConsoleUtil.readRequiredString("Numero de contacto");
+        ConsoleUtil.printSubHeader("DATOS DEL NUEVO CONDUCTOR");
+        ConsoleUtil.printInfo("Formato de datos aceptados: ID (ej: 1000000001), Licencia (C, D, E), Contacto (ej: 3001112233)");
+
+        String id = readIdentificacion("Número de identificación");
+        String nombre = ConsoleUtil.readRequiredString("Nombre completo", "Carlos Andres Rodriguez");
+        TipoLicencia lic = ConsoleUtil.readEnum(TipoLicencia.class, "Seleccione el tipo de licencia (según DB: C, D, E):");
+        String contacto = ConsoleUtil.readValidatedString("Número de contacto (teléfono)", "3001112233",
+                val -> DataValidator.validarContacto(val, "Número de contacto"));
+
         return new Conductor(id, nombre, lic, contacto, EstadoConductor.ACTIVO, null);
     }
 
     public static Conductor readUpdatedConductorData(Conductor c) {
-        ConsoleUtil.printSubHeader("Deje vacio para mantener el valor actual");
-        String nombre = ConsoleUtil.readString("Nombre [" + c.getNombreCompleto() + "]");
-        String licStr = ConsoleUtil.readString("Licencia [" + c.getTipoLicencia().getCodigo() + "]");
-        String contacto = ConsoleUtil.readString("Contacto [" + c.getNumContacto() + "]");
-        String vehiculo = ConsoleUtil.readString("Vehiculo [" + (c.getVehiculoAsignado() != null ? c.getVehiculoAsignado() : "ninguno") + "]");
-        if (!nombre.isEmpty()) c.setNombreCompleto(nombre);
-        if (!licStr.isEmpty()) c.setTipoLicencia(TipoLicencia.fromString(licStr));
-        if (!contacto.isEmpty()) c.setNumContacto(contacto);
-        if (!vehiculo.isEmpty()) c.setVehiculoAsignado(vehiculo);
+        ConsoleUtil.printSubHeader("ACTUALIZACION DE CONDUCTOR");
+        ConsoleUtil.printInfo("Presione ENTER para mantener el valor actual o ingrese el nuevo valor.");
+
+        String nombre = ConsoleUtil.readOptionalString("Nombre completo", c.getNombreCompleto(), "Carlos Andres Rodriguez");
+        String contactoActual = c.getNumContacto();
+        String contacto = ConsoleUtil.readOptionalString("Número de contacto", contactoActual, "3001112233");
+        if (!contacto.equals(contactoActual)) {
+            try {
+                contacto = DataValidator.validarContacto(contacto, "Número de contacto");
+            } catch (Exception e) {
+                ConsoleUtil.printError(e.getMessage());
+                contacto = contactoActual;
+            }
+        }
+
+        c.setNombreCompleto(nombre);
+        c.setNumContacto(contacto);
         return c;
     }
 
     public static EstadoConductor readNewEstado() {
-        return ConsoleUtil.readEnum(EstadoConductor.class, "Seleccione el nuevo estado:");
+        return ConsoleUtil.readEnum(EstadoConductor.class, "Seleccione el nuevo estado del conductor:");
     }
 
     public static String readVehiculoPlaca() {
-        return ConsoleUtil.readRequiredString("Placa del vehiculo a asignar").toUpperCase();
+        return ConsoleUtil.readValidatedString("Placa del vehículo a asignar", "ABC-123", DataValidator::validarPlaca);
     }
 
     public static void showConductorDetail(Conductor c) {
@@ -69,7 +86,7 @@ public final class ConductorView {
         System.out.println("Licencia:       " + c.getTipoLicencia());
         System.out.println("Contacto:       " + c.getNumContacto());
         System.out.println("Estado:         " + c.getEstado());
-        System.out.println("Vehiculo:       " + (c.getVehiculoAsignado() != null ? c.getVehiculoAsignado() : "Ninguno"));
+        System.out.println("Vehículo:       " + (c.getVehiculoAsignado() != null ? c.getVehiculoAsignado() : "Ninguno"));
     }
 
     public static void showConductorList(List<Conductor> conductores) {
@@ -81,7 +98,7 @@ public final class ConductorView {
                     c.getTipoLicencia().getCodigo(), c.getNumContacto(), c.getEstado().toString(),
                     c.getVehiculoAsignado() != null ? c.getVehiculoAsignado() : "-"};
         }
-        ConsoleUtil.printTable(new String[]{"ID", "Nombre", "Lic.", "Contacto", "Estado", "Vehiculo"}, rows);
+        ConsoleUtil.printTable(new String[]{"ID", "Nombre", "Lic.", "Contacto", "Estado", "Vehículo"}, rows);
     }
 
     public static void showConductoresByEstado(List<Conductor> conductores, EstadoConductor estado) {
@@ -90,24 +107,24 @@ public final class ConductorView {
     }
 
     public static void showConductoresDisponibles(List<Conductor> conductores) {
-        ConsoleUtil.printInfo("Conductores disponibles (sin vehiculo asignado):");
+        ConsoleUtil.printInfo("Conductores disponibles (sin vehículo asignado):");
         showConductorList(conductores);
     }
 
     public static void showConductoresByTipoLicencia(List<Conductor> conductores, TipoLicencia tipo) {
-        ConsoleUtil.printInfo("Conductores con licencia " + tipo + ":");
+        ConsoleUtil.printInfo("Conductores con licencia categoría " + tipo + ":");
         showConductorList(conductores);
     }
 
     public static void showAsignacionInfo(String conductorId, String placa) {
-        ConsoleUtil.printSuccess("Vehiculo " + placa + " asignado al conductor " + conductorId);
+        ConsoleUtil.printSuccess("Vehículo " + placa + " asignado exitosamente al conductor " + conductorId);
     }
 
     public static void showLiberacionInfo(String conductorId) {
-        ConsoleUtil.printSuccess("Vehiculo liberado del conductor " + conductorId);
+        ConsoleUtil.printSuccess("Vehículo liberado exitosamente del conductor " + conductorId);
     }
 
     public static boolean confirmDelete(String id) {
-        return ConsoleUtil.readConfirmation("Eliminar conductor " + id + "?");
+        return ConsoleUtil.readConfirmation("¿Confirma la eliminación del conductor " + id + "?");
     }
 }

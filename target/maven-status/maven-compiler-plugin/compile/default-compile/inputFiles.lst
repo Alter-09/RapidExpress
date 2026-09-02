@@ -18,10 +18,14 @@ C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\jav
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\RutaPaqueteDAO.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\dao\VehiculoDAO.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\CapacidadExcedidaException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\DatoInvalidoException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\DatoRequeridoException.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\EntidadDuplicadaException.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\EntidadNoEncontradaException.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\EstadoInvalidoException.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\FormatoInvalidoException.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\package-info.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\RangoInvalidoException.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\RapidExpressException.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\exception\ValidacionException.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\Main.java
@@ -48,6 +52,7 @@ C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\jav
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\ReporteService.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\RutaService.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\service\VehiculoService.java
+C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\util\DataValidator.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\util\FileLogUtil.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\util\package-info.java
 C:\Users\Santiago Sarmiento\Documents\NetBeansProjects\RapidExpress\src\main\java\com\RapidExpress\view\ConductorView.java
