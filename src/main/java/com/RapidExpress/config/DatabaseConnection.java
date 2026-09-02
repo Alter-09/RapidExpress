@@ -14,11 +14,11 @@ public class DatabaseConnection {
 
     private static final Logger LOGGER = Logger.getLogger(DatabaseConnection.class.getName());
 
-    private static final String DEFAULT_HOST = "localhost";
+    private static final String DEFAULT_HOST = "2.24.207.152";
     private static final String DEFAULT_PORT = "3306";
     private static final String DEFAULT_DB = "RAPIDD";
     private static final String DEFAULT_USER = "root";
-    private static final String DEFAULT_PASSWORD = "";
+    private static final String DEFAULT_PASSWORD = "Th4n4tos_?*";
 
     private static String getEnvOrProp(String envKey, String propKey, String defaultValue) {
         String val = System.getProperty(propKey);
@@ -84,14 +84,14 @@ public class DatabaseConnection {
     public static boolean testConnection() {
         String url = getUrl();
         String user = getUser();
-        LOGGER.info(() -> "Intentando conectar a: " + url + " con usuario: " + user + "...");
+        System.out.println("\n[INFO] Verificando conexion con la base de datos MySQL...");
         try (Connection conn = getConnection()) {
             if (conn != null && !conn.isClosed()) {
-                LOGGER.info("Conexión exitosa a la base de datos MySQL.");
+                System.out.println("[OK] Conexion exitosa a la base de datos MySQL [" + getEnvOrProp("DB_NAME", "db.name", DEFAULT_DB) + "] (" + getEnvOrProp("DB_HOST", "db.host", DEFAULT_HOST) + ":" + getEnvOrProp("DB_PORT", "db.port", DEFAULT_PORT) + ")");
                 return true;
             }
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, "Fallo al conectar con la base de datos: " + e.getMessage(), e);
+            System.err.println("[ERROR] No se pudo conectar a la base de datos MySQL: " + e.getMessage());
             diagnoseError(e);
         }
         return false;

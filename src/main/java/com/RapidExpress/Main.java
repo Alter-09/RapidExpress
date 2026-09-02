@@ -1,5 +1,6 @@
 package com.RapidExpress;
 
+import com.RapidExpress.config.DatabaseConnection;
 import com.RapidExpress.controller.*;
 import com.RapidExpress.view.ConsoleUtil;
 import com.RapidExpress.view.MainMenuView;
@@ -11,6 +12,13 @@ public class Main {
 
     public static void main(String[] args) {
         ConsoleUtil.printHeader("RapidExpress - Sistema de Gestion de Flotas y Rutas");
+
+        // Verificación inicial de conexión a la base de datos
+        boolean dbOk = DatabaseConnection.testConnection();
+        if (!dbOk) {
+            ConsoleUtil.printError("La aplicacion se inicio SIN conexion activa a la base de datos.");
+            ConsoleUtil.printInfo("Las operaciones CRUD fallaran hasta que se inicie el servicio MySQL.");
+        }
 
         VehiculoController vehiculo = new VehiculoController();
         ConductorController conductor = new ConductorController();
