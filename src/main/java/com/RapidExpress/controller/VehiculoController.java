@@ -1,8 +1,9 @@
 package com.RapidExpress.controller;
 
-import com.RapidExpress.dao.VehiculoDAO;
+import com.RapidExpress.exception.RapidExpressException;
 import com.RapidExpress.model.entity.Vehiculo;
 import com.RapidExpress.model.enums.EstadoVehiculo;
+import com.RapidExpress.service.VehiculoService;
 import com.RapidExpress.view.ConsoleUtil;
 import com.RapidExpress.view.VehiculoView;
 
@@ -10,11 +11,21 @@ import java.util.List;
 
 /**
  * Vehicle controller - orchestrates vehicle CRUD and state management.
- * Uses MenuRunner to eliminate boilerplate menu loop.
+ * Connects directly to VehiculoService to guarantee validation, business invariants,
+ * and centralized audit logging (Fixes Fallo 4, complies with SRP/DIP).
  */
 public class VehiculoController {
 
-    private final VehiculoDAO dao = new VehiculoDAO();
+    private final VehiculoService vehiculoService;
+    private static final String DEFAULT_USER = "OPERADOR_CLI";
+
+    public VehiculoController() {
+        this(new VehiculoService());
+    }
+
+    public VehiculoController(VehiculoService vehiculoService) {
+        this.vehiculoService = vehiculoService;
+    }
 
     public void run() {
         MenuRunner.run(
@@ -35,86 +46,92 @@ public class VehiculoController {
         ConsoleUtil.printSubHeader("REGISTRAR NUEVO VEHICULO");
         Vehiculo vehiculo = VehiculoView.readNewVehiculoData();
         if (vehiculo != null) {
-            if (dao.create(vehiculo)) {
-                ConsoleUtil.printSuccess("Vehiculo registrado exitosamente.");
-            } else {
-                ConsoleUtil.printError("No se pudo registrar el vehiculo.");
+            try {
+                vehiculoService.registrarVehiculo(vehiculo, DEFAULT_USER);
+                ConsoleUtil.printSuccess("Vehiculo registrado exitosamente con placa: " + vehiculo.getPlaca());
+            } catch (RapidExpressException e) {
+                ConsoleUtil.printError("Error al registrar vehículo: " + e.getMessage());
+            } catch (Exception e) {
+                ConsoleUtil.printError("Error inesperado: " + e.getMessage());
             }
         }
     }
 
     private void listarTodos(int opt) {
         ConsoleUtil.printSubHeader("LISTA DE VEHICULOS");
-        List<Vehiculo> vehiculos = dao.findAll();
+        List<Vehiculo> vehiculos = vehiculoService.listarTodos();
         VehiculoView.showVehiculoList(vehiculos);
     }
 
     private void buscarPorPlaca(int opt) {
         ConsoleUtil.printSubHeader("BUSCAR VEHICULO POR PLACA");
         String placa = VehiculoView.readPlaca("Ingrese la placa");
-        dao.findById(placa).ifPresentOrElse(
-                VehiculoView::showVehiculoDetail,
-                () -> ConsoleUtil.printError("Vehiculo no encontrado.")
-        );
+        try {
+            Vehiculo vehiculo = vehiculoService.obtenerVehiculo(placa);
+            VehiculoView.showVehiculoDetail(vehiculo);
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError(e.getMessage());
+        }
     }
 
     private void actualizarVehiculo(int opt) {
         ConsoleUtil.printSubHeader("ACTUALIZAR VEHICULO");
         String placa = VehiculoView.readPlaca("Ingrese la placa del vehiculo a actualizar");
-        dao.findById(placa).ifPresentOrElse(vehiculo -> {
+        try {
+            Vehiculo vehiculo = vehiculoService.obtenerVehiculo(placa);
+            VehiculoView.showVehiculoDetail(vehiculo);
             Vehiculo actualizado = VehiculoView.readUpdatedVehiculoData(vehiculo);
-            if (dao.update(actualizado)) {
-                ConsoleUtil.printSuccess("Vehiculo actualizado exitosamente.");
-            } else {
-                ConsoleUtil.printError("No se pudo actualizar el vehiculo.");
-            }
-        }, () -> ConsoleUtil.printError("Vehiculo no encontrado."));
+            vehiculoService.actualizarVehiculo(actualizado, DEFAULT_USER);
+            ConsoleUtil.printSuccess("Vehiculo actualizado exitosamente.");
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al actualizar vehículo: " + e.getMessage());
+        }
     }
 
     private void cambiarEstado(int opt) {
         ConsoleUtil.printSubHeader("CAMBIAR ESTADO DEL VEHICULO");
         String placa = VehiculoView.readPlaca("Ingrese la placa");
-        dao.findById(placa).ifPresentOrElse(vehiculo -> {
+        try {
+            Vehiculo vehiculo = vehiculoService.obtenerVehiculo(placa);
             VehiculoView.showVehiculoDetail(vehiculo);
             EstadoVehiculo nuevoEstado = VehiculoView.readNewEstado();
-            if (dao.updateEstado(placa, nuevoEstado)) {
-                ConsoleUtil.printSuccess("Estado actualizado a: " + nuevoEstado);
-            } else {
-                ConsoleUtil.printError("No se pudo actualizar el estado.");
-            }
-        }, () -> ConsoleUtil.printError("Vehiculo no encontrado."));
+            vehiculoService.cambiarEstado(placa, nuevoEstado, DEFAULT_USER);
+            ConsoleUtil.printSuccess("Estado actualizado a: " + nuevoEstado);
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al cambiar estado: " + e.getMessage());
+        }
     }
 
     private void eliminarVehiculo(int opt) {
         ConsoleUtil.printSubHeader("ELIMINAR VEHICULO");
         String placa = VehiculoView.readPlaca("Ingrese la placa del vehiculo a eliminar");
-        dao.findById(placa).ifPresentOrElse(vehiculo -> {
+        try {
+            Vehiculo vehiculo = vehiculoService.obtenerVehiculo(placa);
             VehiculoView.showVehiculoDetail(vehiculo);
             if (VehiculoView.confirmDelete(placa)) {
-                if (dao.delete(placa)) {
-                    ConsoleUtil.printSuccess("Vehiculo eliminado exitosamente.");
-                } else {
-                    ConsoleUtil.printError("No se pudo eliminar el vehiculo.");
-                }
+                vehiculoService.eliminarVehiculo(placa, DEFAULT_USER);
+                ConsoleUtil.printSuccess("Vehiculo eliminado exitosamente.");
             } else {
                 ConsoleUtil.printInfo("Operacion cancelada.");
             }
-        }, () -> ConsoleUtil.printError("Vehiculo no encontrado."));
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al eliminar vehículo: " + e.getMessage());
+        }
     }
 
     private void verPorEstado(int opt) {
         ConsoleUtil.printSubHeader("VEHICULOS POR ESTADO");
         EstadoVehiculo estado = VehiculoView.readNewEstado();
-        List<Vehiculo> vehiculos = dao.findByEstado(estado);
+        List<Vehiculo> vehiculos = vehiculoService.listarPorEstado(estado);
         VehiculoView.showVehiculosByEstado(vehiculos, estado);
     }
 
     private void verEstadisticas(int opt) {
         ConsoleUtil.printSubHeader("ESTADISTICAS DE FLOTA");
-        int total = dao.count();
-        int disponibles = dao.countByEstado(EstadoVehiculo.DISPONIBLE);
-        int enRuta = dao.countByEstado(EstadoVehiculo.EN_RUTA);
-        int enMantenimiento = dao.countByEstado(EstadoVehiculo.EN_MANTENIMIENTO);
+        int total = vehiculoService.contarVehiculos();
+        int disponibles = vehiculoService.contarPorEstado(EstadoVehiculo.DISPONIBLE);
+        int enRuta = vehiculoService.contarPorEstado(EstadoVehiculo.EN_RUTA);
+        int enMantenimiento = vehiculoService.contarPorEstado(EstadoVehiculo.EN_MANTENIMIENTO);
         VehiculoView.showStats(total, disponibles, enRuta, enMantenimiento);
     }
 }
