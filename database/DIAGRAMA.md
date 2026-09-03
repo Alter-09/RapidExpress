@@ -4,12 +4,12 @@
 
 ```mermaid
 erDiagram
-    VEHICULO ||--o| CONDUCTOR : "assigned_to"
-    VEHICULO ||--o{ RUTA : "used_in"
-    VEHICULO ||--o{ MANTENIMIENTO : "has"
-    CONDUCTOR ||--o{ RUTA : "drives"
-    RUTA ||--o{ RUTA_PAQUETE : "contains"
-    PAQUETE ||--o{ RUTA_PAQUETE : "assigned_to"
+    VEHICULO ||--o| CONDUCTOR : "vehiculo_asignado"
+    VEHICULO ||--o{ RUTA : "vehiculo_placa"
+    VEHICULO ||--o{ MANTENIMIENTO : "vehiculo_placa"
+    CONDUCTOR ||--o{ RUTA : "conductor_id"
+    RUTA ||--o{ RUTA_PAQUETE : "ruta_id"
+    PAQUETE ||--o{ RUTA_PAQUETE : "paquete_id"
     RUTA ||--o{ AUDITORIA : "audited"
     VEHICULO ||--o{ AUDITORIA : "audited"
     CONDUCTOR ||--o{ AUDITORIA : "audited"
@@ -17,85 +17,85 @@ erDiagram
     MANTENIMIENTO ||--o{ AUDITORIA : "audited"
 
     VEHICULO {
-        VARCHAR(10) placa PK
-        VARCHAR(50) marca
-        VARCHAR(50) modelo
-        SMALLINT anio_fabricacion
-        DECIMAL(10,2) capacidad_max_kg
-        ENUM estado
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        string placa PK
+        string marca
+        string modelo
+        smallint anio_fabricacion
+        decimal capacidad_max_kg
+        enum estado
+        timestamp created_at
+        timestamp updated_at
     }
 
     CONDUCTOR {
-        VARCHAR(20) num_identificacion PK
-        VARCHAR(100) nombre_completo
-        ENUM tipo_licencia
-        VARCHAR(20) num_contacto
-        ENUM estado
-        VARCHAR(10) vehiculo_asignado FK,UK
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        string num_identificacion PK
+        string nombre_completo
+        enum tipo_licencia
+        string num_contacto
+        enum estado
+        string vehiculo_asignado FK
+        timestamp created_at
+        timestamp updated_at
     }
 
     PAQUETE {
-        VARCHAR(36) id_seguimiento PK
-        VARCHAR(255) descripcion
-        DECIMAL(8,2) peso_kg
-        VARCHAR(50) dimensiones
-        VARCHAR(255) dir_origen
-        VARCHAR(255) dir_destino
-        VARCHAR(100) remitente_nombre
-        VARCHAR(20) remitente_contacto
-        VARCHAR(255) remitente_direccion
-        VARCHAR(100) destinatario_nombre
-        VARCHAR(20) destinatario_contacto
-        VARCHAR(255) destinatario_direccion
-        ENUM estado
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        string id_seguimiento PK
+        string descripcion
+        decimal peso_kg
+        string dimensiones
+        string dir_origen
+        string dir_destino
+        string remitente_nombre
+        string remitente_contacto
+        string remitente_direccion
+        string destinatario_nombre
+        string destinatario_contacto
+        string destinatario_direccion
+        enum estado
+        timestamp created_at
+        timestamp updated_at
     }
 
     RUTA {
-        BIGINT id_ruta PK
-        DATE fecha
-        VARCHAR(10) vehiculo_placa FK
-        VARCHAR(20) conductor_id FK
-        ENUM estado
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
+        bigint id_ruta PK
+        date fecha
+        string vehiculo_placa FK
+        string conductor_id FK
+        enum estado
+        timestamp created_at
+        timestamp updated_at
     }
 
     RUTA_PAQUETE {
-        BIGINT ruta_id PK,FK
-        VARCHAR(36) paquete_id PK,FK
-        ENUM estado_paquete
-        SMALLINT orden_entrega
-        TEXT observaciones
-        TIMESTAMP actualizado_en
+        bigint ruta_id PK
+        string paquete_id PK
+        enum estado_paquete
+        smallint orden_entrega
+        text observaciones
+        timestamp actualizado_en
     }
 
     MANTENIMIENTO {
-        BIGINT id_mantenimiento PK
-        VARCHAR(10) vehiculo_placa FK
-        DATE fecha
-        ENUM tipo
-        TEXT descripcion
-        DECIMAL(12,2) costo
-        INT kilometraje
-        VARCHAR(100) proveedor
-        TIMESTAMP created_at
+        bigint id_mantenimiento PK
+        string vehiculo_placa FK
+        date fecha
+        enum tipo
+        text descripcion
+        decimal costo
+        int kilometraje
+        string proveedor
+        timestamp created_at
     }
 
     AUDITORIA {
-        BIGINT id_auditoria PK
-        DATETIME(3) timestamp
-        VARCHAR(50) operacion
-        VARCHAR(50) entidad
-        VARCHAR(100) entidad_id
-        VARCHAR(100) usuario
-        JSON detalles
-        VARCHAR(45) ip_origen
+        bigint id_auditoria PK
+        timestamp timestamp
+        string operacion
+        string entidad
+        string entidad_id
+        string usuario
+        json detalles
+        string ip_origen
     }
 ```
 
