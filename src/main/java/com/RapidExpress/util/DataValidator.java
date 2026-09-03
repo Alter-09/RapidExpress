@@ -3,6 +3,7 @@ package com.RapidExpress.util;
 import com.RapidExpress.exception.DatoRequeridoException;
 import com.RapidExpress.exception.FormatoInvalidoException;
 import com.RapidExpress.exception.RangoInvalidoException;
+import com.RapidExpress.model.enums.TipoLicencia;
 
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
@@ -15,6 +16,8 @@ public final class DataValidator {
 
     // Patrones regex basados en README.md
     private static final Pattern PATTERN_PLACA = Pattern.compile("^[A-Z]{3}-\\d{3}$|^[A-Z0-9-]{3,10}$");
+    private static final Pattern PATTERN_IDENTIFICACION_CONDUCTOR = Pattern.compile("^\\d{4,20}$");
+    private static final Pattern PATTERN_NOMBRE_COMPLETO = Pattern.compile("^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+(?:[\\s.'-]+[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+)+$");
     private static final Pattern PATTERN_CONTACTO = Pattern.compile("^\\d{7,15}$");
     private static final Pattern PATTERN_ID_SEGUIMIENTO = Pattern.compile("^PKG-\\d{8}-\\w{3,4}$|^[a-zA-Z0-9-]{8,36}$");
     private static final Pattern PATTERN_DIMENSIONES = Pattern.compile("^\\d+(\\.\\d+)?x\\d+(\\.\\d+)?x\\d+(\\.\\d+)?$");
@@ -59,17 +62,47 @@ public final class DataValidator {
     }
 
     /**
-     * Valida el número de identificación del conductor según VARCHAR(20).
+     * Valida el número de identificación del conductor según VARCHAR(20) y formato numérico representativo (ej: 1000000001).
      */
     public static String validarIdentificacionConductor(String id) throws DatoRequeridoException, FormatoInvalidoException {
         if (id == null || id.trim().isEmpty()) {
             throw new DatoRequeridoException("Número de identificación", "1000000001");
         }
         String limpio = id.trim();
-        if (limpio.length() > 20) {
-            throw new FormatoInvalidoException("Número de identificación", id, "Máximo 20 caracteres", "1000000001");
+        if (limpio.length() > 20 || !PATTERN_IDENTIFICACION_CONDUCTOR.matcher(limpio).matches() || limpio.matches("^0+$")) {
+            throw new FormatoInvalidoException("Número de identificación", id,
+                    "Entre 4 y 20 dígitos numéricos (ej: 1000000001)", "1000000001");
         }
         return limpio;
+    }
+
+    /**
+     * Valida el nombre completo del conductor según VARCHAR(100) y formato representativo (ej: Carlos Andres Rodriguez).
+     */
+    public static String validarNombreCompleto(String nombre) throws DatoRequeridoException, FormatoInvalidoException {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new DatoRequeridoException("Nombre completo", "Carlos Andres Rodriguez");
+        }
+        String limpio = nombre.trim().replaceAll("\\s+", " ");
+        if (limpio.length() < 3 || limpio.length() > 100 || !PATTERN_NOMBRE_COMPLETO.matcher(limpio).matches()) {
+            throw new FormatoInvalidoException("Nombre completo", nombre,
+                    "Nombre y apellido válidos usando únicamente letras y acentos (hasta 100 caracteres)", "Carlos Andres Rodriguez");
+        }
+        return limpio;
+    }
+
+    /**
+     * Valida el tipo de licencia del conductor según las categorías de transporte de database/README.md (C, D, E).
+     */
+    public static TipoLicencia validarTipoLicenciaConductor(TipoLicencia tipo) throws DatoRequeridoException, FormatoInvalidoException {
+        if (tipo == null) {
+            throw new DatoRequeridoException("Tipo de licencia", "C");
+        }
+        if (tipo != TipoLicencia.C && tipo != TipoLicencia.D && tipo != TipoLicencia.E) {
+            throw new FormatoInvalidoException("Tipo de licencia", tipo.getCodigo(),
+                    "Categoría válida para transporte de carga según base de datos (C, D, E)", "C");
+        }
+        return tipo;
     }
 
     /**
@@ -81,8 +114,8 @@ public final class DataValidator {
             throw new DatoRequeridoException(nombreCampo, "3001112233");
         }
         String limpio = contacto.trim().replaceAll("\\s+", "");
-        if (!PATTERN_CONTACTO.matcher(limpio).matches()) {
-            throw new FormatoInvalidoException(nombreCampo, contacto, "Entre 7 y 15 dígitos numéricos", "3001112233");
+        if (!PATTERN_CONTACTO.matcher(limpio).matches() || limpio.matches("^0+$")) {
+            throw new FormatoInvalidoException(nombreCampo, contacto, "Entre 7 y 15 dígitos numéricos válidos", "3001112233");
         }
         return limpio;
     }
