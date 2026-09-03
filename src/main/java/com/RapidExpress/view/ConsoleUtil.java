@@ -184,6 +184,25 @@ public final class ConsoleUtil {
         return input.isEmpty() ? currentValue : input;
     }
 
+    public static String readOptionalValidatedString(String prompt, String currentValue, String example, StringValidator validator) {
+        while (true) {
+            String p = prompt + " [" + (currentValue != null ? currentValue : "vacio") + "]";
+            if (example != null && !example.isEmpty()) {
+                p += " (ej: " + example + ")";
+            }
+            System.out.print(p + ": ");
+            String input = SC.nextLine().trim();
+            if (input.isEmpty()) {
+                return currentValue;
+            }
+            try {
+                return validator.validate(input);
+            } catch (ValidacionException e) {
+                printError(e.getMessage());
+            }
+        }
+    }
+
     public static Integer readOptionalInt(String prompt, Integer currentValue, String example, int min, int max) {
         while (true) {
             String p = prompt + " [" + currentValue + "] [" + min + " - " + max + "]";

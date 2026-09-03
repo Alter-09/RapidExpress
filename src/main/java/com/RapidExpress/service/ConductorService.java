@@ -10,6 +10,8 @@ import com.RapidExpress.model.entity.Conductor;
 import com.RapidExpress.model.entity.Vehiculo;
 import com.RapidExpress.model.enums.EstadoConductor;
 import com.RapidExpress.model.enums.EstadoVehiculo;
+import com.RapidExpress.model.enums.TipoLicencia;
+import com.RapidExpress.util.DataValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -171,6 +173,16 @@ public class ConductorService {
         return conductorDAO.findDisponibles();
     }
 
+    public List<Conductor> listarPorEstado(EstadoConductor estado) {
+        if (estado == null) return listarTodos();
+        return conductorDAO.findByEstado(estado);
+    }
+
+    public List<Conductor> listarPorTipoLicencia(TipoLicencia tipo) {
+        if (tipo == null) return listarTodos();
+        return conductorDAO.findByTipoLicencia(tipo);
+    }
+
     private void validarVehiculoParaAsignar(String placa, String conductorActualId) throws ValidacionException {
         Optional<Vehiculo> vehiculoOpt = vehiculoDAO.findById(placa);
         if (vehiculoOpt.isEmpty()) {
@@ -194,17 +206,9 @@ public class ConductorService {
         if (c == null) {
             throw new ValidacionException("El conductor no puede ser nulo.");
         }
-        if (c.getNumIdentificacion() == null || c.getNumIdentificacion().trim().isEmpty()) {
-            throw new ValidacionException("El número de identificación es obligatorio.");
-        }
-        if (c.getNombreCompleto() == null || c.getNombreCompleto().trim().isEmpty()) {
-            throw new ValidacionException("El nombre completo es obligatorio.");
-        }
-        if (c.getTipoLicencia() == null) {
-            throw new ValidacionException("El tipo de licencia es obligatorio.");
-        }
-        if (c.getNumContacto() == null || c.getNumContacto().trim().isEmpty()) {
-            throw new ValidacionException("El número de contacto es obligatorio.");
-        }
+        DataValidator.validarIdentificacionConductor(c.getNumIdentificacion());
+        DataValidator.validarNombreCompleto(c.getNombreCompleto());
+        DataValidator.validarTipoLicenciaConductor(c.getTipoLicencia());
+        DataValidator.validarContacto(c.getNumContacto(), "Número de contacto");
     }
 }

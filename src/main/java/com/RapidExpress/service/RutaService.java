@@ -308,4 +308,47 @@ public class RutaService {
     public BigDecimal calcularPesoTotalRuta(Long idRuta) {
         return rutaPaqueteDAO.getPesoTotalRuta(idRuta);
     }
+
+    public void actualizarRuta(Ruta ruta, String usuario) throws EntidadNoEncontradaException, ValidacionException {
+        if (ruta == null || ruta.getIdRuta() == null) {
+            throw new ValidacionException("La ruta debe ser válida y contener un ID.");
+        }
+        obtenerRuta(ruta.getIdRuta());
+        boolean actualizado = rutaDAO.update(ruta);
+        if (!actualizado) {
+            throw new ValidacionException("No se pudo actualizar la ruta.");
+        }
+        auditoriaService.registrar("UPDATE", "ruta", String.valueOf(ruta.getIdRuta()), usuario,
+                String.format("Ruta %d actualizada: Vehículo=%s, Conductor=%s, Fecha=%s",
+                        ruta.getIdRuta(), ruta.getVehiculoPlaca(), ruta.getConductorId(), ruta.getFecha()));
+    }
+
+    public void cambiarEstado(Long idRuta, EstadoRuta nuevoEstado, String usuario)
+            throws EntidadNoEncontradaException, ValidacionException {
+        Ruta ruta = obtenerRuta(idRuta);
+        boolean actualizado = rutaDAO.updateEstado(idRuta, nuevoEstado);
+        if (!actualizado) {
+            throw new ValidacionException("No se pudo actualizar el estado de la ruta.");
+        }
+        auditoriaService.registrar("STATE_CHANGE", "ruta", String.valueOf(idRuta), usuario,
+                String.format("Ruta %d: Estado anterior %s -> Nuevo %s", idRuta, ruta.getEstado(), nuevoEstado));
+    }
+
+    public List<Ruta> listarPorEstado(EstadoRuta estado) {
+        if (estado == null) return listarTodas();
+        return rutaDAO.findByEstado(estado);
+    }
+
+    public List<Ruta> listarPorFecha(LocalDate fecha) {
+        if (fecha == null) return listarTodas();
+        return rutaDAO.findByFecha(fecha);
+    }
+
+    public int contarRutas() {
+        return rutaDAO.count();
+    }
+
+    public int contarPorEstado(EstadoRuta estado) {
+        return rutaDAO.countByEstado(estado);
+    }
 }

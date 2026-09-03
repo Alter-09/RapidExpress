@@ -39,11 +39,16 @@ public final class ConductorView {
 
     public static Conductor readNewConductorData() {
         ConsoleUtil.printSubHeader("DATOS DEL NUEVO CONDUCTOR");
-        ConsoleUtil.printInfo("Formato de datos aceptados: ID (ej: 1000000001), Licencia (C, D, E), Contacto (ej: 3001112233)");
+        ConsoleUtil.printInfo("Formato de datos aceptados según database/README.md:");
+        ConsoleUtil.printInfo("- ID: Dígitos numéricos (ej: 1000000001)");
+        ConsoleUtil.printInfo("- Nombre: Nombre y apellido válido (ej: Carlos Andres Rodriguez)");
+        ConsoleUtil.printInfo("- Licencia: Categoría de transporte pesado C, D o E (ej: C)");
+        ConsoleUtil.printInfo("- Contacto: Teléfono válido (ej: 3001112233)");
 
         String id = readIdentificacion("Número de identificación");
-        String nombre = ConsoleUtil.readRequiredString("Nombre completo", "Carlos Andres Rodriguez");
-        TipoLicencia lic = ConsoleUtil.readEnum(TipoLicencia.class, "Seleccione el tipo de licencia (según DB: C, D, E):");
+        String nombre = ConsoleUtil.readValidatedString("Nombre completo", "Carlos Andres Rodriguez",
+                DataValidator::validarNombreCompleto);
+        TipoLicencia lic = readTipoLicencia();
         String contacto = ConsoleUtil.readValidatedString("Número de contacto (teléfono)", "3001112233",
                 val -> DataValidator.validarContacto(val, "Número de contacto"));
 
@@ -54,21 +59,34 @@ public final class ConductorView {
         ConsoleUtil.printSubHeader("ACTUALIZACION DE CONDUCTOR");
         ConsoleUtil.printInfo("Presione ENTER para mantener el valor actual o ingrese el nuevo valor.");
 
-        String nombre = ConsoleUtil.readOptionalString("Nombre completo", c.getNombreCompleto(), "Carlos Andres Rodriguez");
-        String contactoActual = c.getNumContacto();
-        String contacto = ConsoleUtil.readOptionalString("Número de contacto", contactoActual, "3001112233");
-        if (!contacto.equals(contactoActual)) {
-            try {
-                contacto = DataValidator.validarContacto(contacto, "Número de contacto");
-            } catch (Exception e) {
-                ConsoleUtil.printError(e.getMessage());
-                contacto = contactoActual;
-            }
-        }
+        String nombre = ConsoleUtil.readOptionalValidatedString("Nombre completo", c.getNombreCompleto(),
+                "Carlos Andres Rodriguez", DataValidator::validarNombreCompleto);
+        TipoLicencia lic = readOptionalTipoLicencia(c.getTipoLicencia());
+        String contacto = ConsoleUtil.readOptionalValidatedString("Número de contacto", c.getNumContacto(),
+                "3001112233", val -> DataValidator.validarContacto(val, "Número de contacto"));
 
         c.setNombreCompleto(nombre);
+        c.setTipoLicencia(lic);
         c.setNumContacto(contacto);
         return c;
+    }
+
+    public static TipoLicencia readTipoLicencia() {
+        TipoLicencia[] licenciasValidas = {TipoLicencia.C, TipoLicencia.D, TipoLicencia.E};
+        System.out.println("Seleccione el tipo de licencia (según BD: C, D, E):");
+        for (int i = 0; i < licenciasValidas.length; i++) {
+            System.out.println("  " + (i + 1) + ". " + licenciasValidas[i]);
+        }
+        int idx = ConsoleUtil.readInt("Seleccione", "1", 1, licenciasValidas.length);
+        return licenciasValidas[idx - 1];
+    }
+
+    public static TipoLicencia readOptionalTipoLicencia(TipoLicencia actual) {
+        System.out.println("Tipo de licencia actual: " + actual);
+        if (ConsoleUtil.readConfirmation("¿Desea cambiar el tipo de licencia?")) {
+            return readTipoLicencia();
+        }
+        return actual;
     }
 
     public static EstadoConductor readNewEstado() {

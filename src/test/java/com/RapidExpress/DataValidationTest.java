@@ -1,6 +1,7 @@
 package com.RapidExpress;
 
 import com.RapidExpress.exception.*;
+import com.RapidExpress.model.enums.TipoLicencia;
 import com.RapidExpress.util.DataValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -79,19 +80,62 @@ public class DataValidationTest {
     }
 
     @Test
-    @DisplayName("Identificación de conductor respeta VARCHAR(20) y obligatoriedad")
+    @DisplayName("Identificación de conductor respeta VARCHAR(20), formato numérico y rechaza datos sin sentido")
     void testIdentificacionConductor() {
         assertDoesNotThrow(() -> {
             assertEquals("1000000001", DataValidator.validarIdentificacionConductor("1000000001"));
             assertEquals("1000000003", DataValidator.validarIdentificacionConductor(" 1000000003 "));
             assertEquals("1000000021", DataValidator.validarIdentificacionConductor("1000000021"));
+            assertEquals("1001", DataValidator.validarIdentificacionConductor("1001"));
         });
 
         assertThrows(DatoRequeridoException.class, () -> DataValidator.validarIdentificacionConductor(""));
         assertThrows(DatoRequeridoException.class, () -> DataValidator.validarIdentificacionConductor(null));
 
+        // Rechaza letras, símbolos y datos sin sentido
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarIdentificacionConductor("abc"));
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarIdentificacionConductor("!@#$%"));
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarIdentificacionConductor("-100000001"));
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarIdentificacionConductor("0000000000"));
         assertThrows(FormatoInvalidoException.class,
                 () -> DataValidator.validarIdentificacionConductor("123456789012345678901")); // 21 chars
+    }
+
+    @Test
+    @DisplayName("Nombre completo valida personas reales y rechaza datos sin sentido")
+    void testNombreCompletoConductor() {
+        assertDoesNotThrow(() -> {
+            assertEquals("Carlos Andres Rodriguez", DataValidator.validarNombreCompleto("Carlos Andres Rodriguez"));
+            assertEquals("María Fernanda Gómez", DataValidator.validarNombreCompleto("  María Fernanda Gómez  "));
+            assertEquals("Juan Carlos Martínez", DataValidator.validarNombreCompleto("Juan Carlos Martínez"));
+            assertEquals("Jorge Eliecer Gaitan", DataValidator.validarNombreCompleto("Jorge Eliecer Gaitan"));
+        });
+
+        assertThrows(DatoRequeridoException.class, () -> DataValidator.validarNombreCompleto(""));
+        assertThrows(DatoRequeridoException.class, () -> DataValidator.validarNombreCompleto(null));
+
+        // Rechaza números, símbolos, un solo nombre o caracteres sin sentido
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarNombreCompleto("123456"));
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarNombreCompleto("Carlos123 Rodriguez"));
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarNombreCompleto("Carlos")); // Falta apellido
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarNombreCompleto("!@#$%^&*()"));
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarNombreCompleto("A".repeat(101)));
+    }
+
+    @Test
+    @DisplayName("Tipo de licencia valida categorías de transporte pesado C, D, E según database/README.md")
+    void testTipoLicenciaConductor() {
+        assertDoesNotThrow(() -> {
+            assertEquals(TipoLicencia.C, DataValidator.validarTipoLicenciaConductor(TipoLicencia.C));
+            assertEquals(TipoLicencia.D, DataValidator.validarTipoLicenciaConductor(TipoLicencia.D));
+            assertEquals(TipoLicencia.E, DataValidator.validarTipoLicenciaConductor(TipoLicencia.E));
+        });
+
+        assertThrows(DatoRequeridoException.class, () -> DataValidator.validarTipoLicenciaConductor(null));
+
+        // No válidas para conductores de carga pesada de RapidExpress (A: Motos, B: Carros particulares)
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarTipoLicenciaConductor(TipoLicencia.A));
+        assertThrows(FormatoInvalidoException.class, () -> DataValidator.validarTipoLicenciaConductor(TipoLicencia.B));
     }
 
     @Test

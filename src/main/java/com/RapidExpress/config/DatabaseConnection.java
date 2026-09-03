@@ -14,11 +14,11 @@ public class DatabaseConnection {
 
     private static final Logger LOGGER = Logger.getLogger(DatabaseConnection.class.getName());
 
-    private static final String DEFAULT_HOST = "2.24.207.152";
+    private static final String DEFAULT_HOST = "";
     private static final String DEFAULT_PORT = "3306";
     private static final String DEFAULT_DB = "RAPIDD";
     private static final String DEFAULT_USER = "root";
-    private static final String DEFAULT_PASSWORD = "Th4n4tos_?*";
+    private static final String DEFAULT_PASSWORD = "";
 
     private static String getEnvOrProp(String envKey, String propKey, String defaultValue) {
         String val = System.getProperty(propKey);

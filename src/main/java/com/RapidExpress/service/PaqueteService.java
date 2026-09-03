@@ -31,6 +31,10 @@ public class PaqueteService {
     }
 
     public String registrarPaquete(Paquete paquete, String usuario) throws ValidacionException, EntidadDuplicadaException {
+        if (paquete == null) {
+            throw new ValidacionException("El paquete no puede ser nulo.");
+        }
+
         if (paquete.getIdSeguimiento() == null || paquete.getIdSeguimiento().trim().isEmpty()) {
             paquete.setIdSeguimiento(generarIdSeguimiento());
         }
@@ -125,6 +129,13 @@ public class PaqueteService {
 
     public List<Paquete> buscarPorDestinatario(String destinatario) {
         return paqueteDAO.findByDestinatario(destinatario);
+    }
+
+    public List<Paquete> listarPorEstado(EstadoPaquete estado) {
+        if (estado == null) {
+            return paqueteDAO.findAll();
+        }
+        return paqueteDAO.findByEstado(estado);
     }
 
     private String generarIdSeguimiento() {

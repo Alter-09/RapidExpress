@@ -1,10 +1,15 @@
 package com.RapidExpress.view;
 
+import com.RapidExpress.model.entity.Paquete;
 import com.RapidExpress.model.entity.Ruta;
+import com.RapidExpress.model.entity.RutaPaquete;
 import com.RapidExpress.model.enums.EstadoRuta;
+import com.RapidExpress.model.enums.EstadoRutaPaquete;
 import com.RapidExpress.util.DataValidator;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,6 +35,8 @@ public final class RutaView {
         System.out.println("11. Filtrar por vehiculo");
         System.out.println("12. Filtrar por conductor");
         System.out.println("13. Estadisticas");
+        System.out.println("14. Ver paquetes de una ruta");
+        System.out.println("15. Actualizar estado de entrega de paquete");
         System.out.println("0. Volver");
     }
 
@@ -139,5 +146,67 @@ public final class RutaView {
 
     public static boolean confirmDelete(Long id) {
         return ConsoleUtil.readConfirmation("¿Confirma la cancelación/eliminación de la ruta " + id + "?");
+    }
+
+    public static List<String> readPaquetesSeleccionados(List<Paquete> enBodega) {
+        ConsoleUtil.printSubHeader("ASIGNACION DE PAQUETES A LA RUTA (EN BODEGA)");
+        if (enBodega == null || enBodega.isEmpty()) {
+            ConsoleUtil.printError("No hay paquetes disponibles en bodega para asignar.");
+            return new ArrayList<>();
+        }
+
+        String[][] rows = new String[enBodega.size()][4];
+        for (int i = 0; i < enBodega.size(); i++) {
+            Paquete p = enBodega.get(i);
+            rows[i] = new String[]{p.getIdSeguimiento(), p.getDescripcion(), p.getPesoKg() + " kg", p.getDirDestino()};
+        }
+        ConsoleUtil.printTable(new String[]{"ID Seguimiento", "Descripción", "Peso", "Destino"}, rows);
+
+        ConsoleUtil.printInfo("Ingrese los IDs de paquetes a cargar separados por coma (ej: PKG-001, PKG-002)");
+        ConsoleUtil.printInfo("O escriba 'TODOS' para asignar todos los paquetes disponibles en bodega.");
+        String input = ConsoleUtil.readRequiredString("IDs de paquetes a asignar: ");
+
+        List<String> seleccionados = new ArrayList<>();
+        if ("TODOS".equalsIgnoreCase(input.trim())) {
+            for (Paquete p : enBodega) {
+                seleccionados.add(p.getIdSeguimiento());
+            }
+        } else {
+            String[] tokens = input.split(",");
+            for (String t : tokens) {
+                String id = t.trim();
+                if (!id.isEmpty()) {
+                    seleccionados.add(id);
+                }
+            }
+        }
+        return seleccionados;
+    }
+
+    public static EstadoRutaPaquete readEstadoEntregaPaquete() {
+        return ConsoleUtil.readEnum(EstadoRutaPaquete.class, "Seleccione el nuevo estado de entrega para el paquete:");
+    }
+
+    public static String readObservacionesEntrega() {
+        return ConsoleUtil.readOptionalString("Observaciones de la entrega", "", "Entregado a conformidad");
+    }
+
+    public static void showRutaPaquetes(List<RutaPaquete> paquetes, Long idRuta) {
+        ConsoleUtil.printSubHeader("PAQUETES ASIGNADOS A LA RUTA " + idRuta);
+        if (paquetes == null || paquetes.isEmpty()) {
+            ConsoleUtil.printInfo("No hay paquetes asociados a esta ruta.");
+            return;
+        }
+        String[][] rows = new String[paquetes.size()][4];
+        for (int i = 0; i < paquetes.size(); i++) {
+            RutaPaquete rp = paquetes.get(i);
+            rows[i] = new String[]{
+                    String.valueOf(rp.getOrdenEntrega()),
+                    rp.getPaqueteId(),
+                    rp.getEstadoPaquete() != null ? rp.getEstadoPaquete().toString() : "-",
+                    rp.getObservaciones() != null ? rp.getObservaciones() : "-"
+            };
+        }
+        ConsoleUtil.printTable(new String[]{"Orden", "Paquete ID", "Estado Entrega", "Observaciones"}, rows);
     }
 }

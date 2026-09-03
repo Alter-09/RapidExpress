@@ -1,105 +1,167 @@
 package com.RapidExpress.controller;
 
-import com.RapidExpress.dao.*;
-import com.RapidExpress.model.entity.*;
-import com.RapidExpress.view.ConsoleUtil;
-import com.RapidExpress.view.ReporteView;
-import com.RapidExpress.view.VehiculoView;
-import com.RapidExpress.view.ConductorView;
-import com.RapidExpress.view.PaqueteView;
-import com.RapidExpress.view.RutaView;
-import com.RapidExpress.view.MantenimientoView;
+import com.RapidExpress.model.entity.Auditoria;
+import com.RapidExpress.model.entity.Conductor;
+import com.RapidExpress.model.entity.Paquete;
+import com.RapidExpress.model.entity.Ruta;
+import com.RapidExpress.service.*;
+import com.RapidExpress.view.*;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Report controller - read-only views across entities.
- * Uses MenuRunner to eliminate boilerplate menu loop.
+ * Report controller - coordinates operational reports and audit log views.
+ * Connects directly to ReporteService, AuditoriaService, PaqueteService, RutaService, and ConductorService
+ * to resolve Fallos 4 and 5 (SRP & DIP compliant).
  */
 public class ReporteController {
 
-    private final VehiculoDAO vehiculoDAO = new VehiculoDAO();
-    private final ConductorDAO conductorDAO = new ConductorDAO();
-    private final PaqueteDAO paqueteDAO = new PaqueteDAO();
-    private final RutaDAO rutaDAO = new RutaDAO();
-    private final MantenimientoDAO mantenimientoDAO = new MantenimientoDAO();
-    private final AuditoriaDAO auditoriaDAO = new AuditoriaDAO();
+    private final ReporteService reporteService;
+    private final AuditoriaService auditoriaService;
+    private final PaqueteService paqueteService;
+    private final RutaService rutaService;
+    private final ConductorService conductorService;
+
+    public ReporteController() {
+        this(new ReporteService(), new AuditoriaService(), new PaqueteService(), new RutaService(), new ConductorService());
+    }
+
+    public ReporteController(ReporteService reporteService, AuditoriaService auditoriaService,
+                             PaqueteService paqueteService, RutaService rutaService, ConductorService conductorService) {
+        this.reporteService = reporteService;
+        this.auditoriaService = auditoriaService;
+        this.paqueteService = paqueteService;
+        this.rutaService = rutaService;
+        this.conductorService = conductorService;
+    }
 
     public void run() {
         MenuRunner.run(
                 ReporteView::showMenu,
                 ReporteView::readMenuOption,
-                this::reporteVehiculos,          // 1
-                this::reporteConductores,        // 2
-                this::reportePaquetesBodega,     // 3
-                this::reporteRutasEnCurso,       // 4
-                this::reporteMantenimientos,     // 5
-                this::reporteAuditorias          // 6
+                this::resumenFlota,                     // 1
+                this::reporteConductores,               // 2
+                this::reportePaquetesBodega,            // 3
+                this::reporteRutasEnCurso,              // 4
+                this::resumenCostosMantenimiento,       // 5
+                this::reporteAuditoriasBD,              // 6
+                this::reporteEntregasPorConductor,      // 7
+                this::reporteHistorialRutasVehiculo,    // 8
+                this::verArchivoAuditoria               // 9
         );
     }
 
-    private void reporteVehiculos(int opt) {
-        ConsoleUtil.printHeader("REPORTE DE VEHICULOS");
-        List<Vehiculo> vehiculos = vehiculoDAO.findAll();
-        VehiculoView.showVehiculoList(vehiculos);
-        int total = vehiculoDAO.count();
-        int disponibles = vehiculoDAO.countByEstado(com.RapidExpress.model.enums.EstadoVehiculo.DISPONIBLE);
-        int enRuta = vehiculoDAO.countByEstado(com.RapidExpress.model.enums.EstadoVehiculo.EN_RUTA);
-        int enMant = vehiculoDAO.countByEstado(com.RapidExpress.model.enums.EstadoVehiculo.EN_MANTENIMIENTO);
-        ConsoleUtil.printLine();
-        ConsoleUtil.printInfo("Total: " + total + " | Disponibles: " + disponibles +
-                " | En ruta: " + enRuta + " | En mant.: " + enMant);
+    private void resumenFlota(int opt) {
+        ConsoleUtil.printHeader("RESUMEN DE FLOTA Y ESTADO ACTUAL");
+        String reporte = reporteService.generarResumenFlota();
+        System.out.println(reporte);
+        gestionarExportacion("resumen_flota.txt", reporte);
     }
 
     private void reporteConductores(int opt) {
         ConsoleUtil.printHeader("REPORTE DE CONDUCTORES");
-        List<Conductor> conductores = conductorDAO.findAll();
+        List<Conductor> conductores = conductorService.listarTodos();
         ConductorView.showConductorList(conductores);
-        ConsoleUtil.printInfo("Total: " + conductorDAO.count());
+        ConsoleUtil.printInfo("Total conductores registrados: " + conductores.size());
     }
 
     private void reportePaquetesBodega(int opt) {
         ConsoleUtil.printHeader("REPORTE DE PAQUETES EN BODEGA");
-        List<Paquete> paquetes = paqueteDAO.findEnBodega();
+        List<Paquete> paquetes = paqueteService.listarEnBodega();
         PaqueteView.showPaqueteList(paquetes);
-        ConsoleUtil.printInfo("Total en bodega: " + paquetes.size());
+        ConsoleUtil.printInfo("Total paquetes en bodega: " + paquetes.size());
     }
 
     private void reporteRutasEnCurso(int opt) {
         ConsoleUtil.printHeader("REPORTE DE RUTAS EN CURSO");
-        List<Ruta> rutas = rutaDAO.findEnCurso();
+        List<Ruta> rutas = rutaService.listarEnCurso();
         RutaView.showRutaList(rutas);
-        ConsoleUtil.printInfo("Rutas en curso: " + rutas.size());
+        ConsoleUtil.printInfo("Total rutas en curso: " + rutas.size());
     }
 
-    private void reporteMantenimientos(int opt) {
-        ConsoleUtil.printHeader("REPORTE DE MANTENIMIENTOS");
-        List<Mantenimiento> mantenimientos = mantenimientoDAO.findAll();
-        MantenimientoView.showMantenimientoList(mantenimientos);
-        BigDecimal total = mantenimientos.stream()
-                .map(Mantenimiento::getCosto)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal promedio = mantenimientos.isEmpty() ? BigDecimal.ZERO
-                : total.divide(BigDecimal.valueOf(mantenimientos.size()), 2, RoundingMode.HALF_UP);
-        ConsoleUtil.printLine();
-        ConsoleUtil.printInfo("Total mantenimientos: " + mantenimientos.size() +
-                " | Costo total: $" + total + " | Promedio: $" + promedio);
+    private void resumenCostosMantenimiento(int opt) {
+        ConsoleUtil.printHeader("REPORTE DE COSTOS DE MANTENIMIENTO POR FLOTA");
+        String reporte = reporteService.generarResumenCostosMantenimiento();
+        System.out.println(reporte);
+        gestionarExportacion("costos_mantenimiento.txt", reporte);
     }
 
-    private void reporteAuditorias(int opt) {
-        ConsoleUtil.printHeader("ULTIMAS AUDITORIAS");
-        List<Auditoria> auditorias = auditoriaDAO.findUltimas(20);
-        if (auditorias.isEmpty()) { ConsoleUtil.printInfo("No hay registros de auditoria."); return; }
+    private void reporteAuditoriasBD(int opt) {
+        ConsoleUtil.printHeader("ULTIMAS AUDITORIAS REGISTRADAS EN BASE DE DATOS");
+        List<Auditoria> auditorias = auditoriaService.listarUltimas(20);
+        if (auditorias.isEmpty()) {
+            ConsoleUtil.printInfo("No hay registros de auditoria en la base de datos.");
+            return;
+        }
         String[][] rows = new String[auditorias.size()][6];
         for (int i = 0; i < auditorias.size(); i++) {
             Auditoria a = auditorias.get(i);
-            rows[i] = new String[]{String.valueOf(a.getIdAuditoria()),
+            rows[i] = new String[]{
+                    String.valueOf(a.getIdAuditoria()),
                     a.getTimestamp() != null ? a.getTimestamp().toString() : "",
-                    a.getOperacion(), a.getEntidad(), a.getEntidadId(),
-                    a.getUsuario() != null ? a.getUsuario() : "-"};
+                    a.getOperacion(),
+                    a.getEntidad(),
+                    a.getEntidadId(),
+                    a.getUsuario() != null ? a.getUsuario() : "-"
+            };
         }
-        ConsoleUtil.printTable(new String[]{"ID", "Timestamp", "Operacion", "Entidad", "ID", "Usuario"}, rows);
+        ConsoleUtil.printTable(new String[]{"ID", "Timestamp", "Operacion", "Entidad", "ID Entidad", "Usuario"}, rows);
+    }
+
+    /**
+     * Fallo 5 Solucionado: Permite consultar entregas por conductor filtrando por rango de fechas.
+     */
+    private void reporteEntregasPorConductor(int opt) {
+        ConsoleUtil.printHeader("REPORTE OPERATIVO: ENTREGAS POR CONDUCTOR");
+        String conductorId = ReporteView.readConductorId("Ingrese la identificación del conductor: ");
+        LocalDate inicio = ReporteView.readFechaInicio();
+        LocalDate fin = ReporteView.readFechaFin();
+
+        String reporte = reporteService.generarReporteEntregasPorConductor(conductorId, inicio, fin);
+        System.out.println(reporte);
+        gestionarExportacion("entregas_conductor_" + conductorId + ".txt", reporte);
+    }
+
+    /**
+     * Fallo 5 Solucionado: Permite consultar el historial consolidado de rutas de un vehículo.
+     */
+    private void reporteHistorialRutasVehiculo(int opt) {
+        ConsoleUtil.printHeader("REPORTE OPERATIVO: HISTORIAL DE RUTAS POR VEHICULO");
+        String placa = ReporteView.readVehiculoPlaca("Ingrese la placa del vehículo: ");
+
+        String reporte = reporteService.generarHistorialRutasVehiculo(placa);
+        System.out.println(reporte);
+        gestionarExportacion("historial_vehiculo_" + placa + ".txt", reporte);
+    }
+
+    /**
+     * Fallo 4 Solucionado: Visualiza directamente las entradas del archivo plano centralizado logs/auditoria.log.
+     */
+    private void verArchivoAuditoria(int opt) {
+        ConsoleUtil.printHeader("REGISTRO CENTRALIZADO DE AUDITORIA (ARCHIVO logs/auditoria.log)");
+        List<String> lineas = auditoriaService.leerLogsDeArchivo();
+        if (lineas.isEmpty()) {
+            ConsoleUtil.printInfo("El archivo logs/auditoria.log aún no contiene registros o no ha sido creado.");
+            return;
+        }
+        ConsoleUtil.printInfo("Total registros en archivo plano: " + lineas.size());
+        ConsoleUtil.printLine();
+        for (String linea : lineas) {
+            System.out.println(linea);
+        }
+        ConsoleUtil.printLine();
+    }
+
+    private void gestionarExportacion(String defaultName, String contenido) {
+        if (ReporteView.confirmExportar()) {
+            String nombreArchivo = ReporteView.readNombreArchivo(defaultName);
+            boolean ok = reporteService.exportarReporte(nombreArchivo, contenido);
+            if (ok) {
+                ConsoleUtil.printSuccess("Reporte exportado exitosamente a logs/" + nombreArchivo);
+            } else {
+                ConsoleUtil.printError("No se pudo exportar el reporte.");
+            }
+        }
     }
 }

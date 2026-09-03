@@ -121,6 +121,19 @@ public class VehiculoService {
         return vehiculoDAO.findByMarca(marca);
     }
 
+    public List<Vehiculo> listarPorEstado(EstadoVehiculo estado) {
+        if (estado == null) return listarTodos();
+        return vehiculoDAO.findByEstado(estado);
+    }
+
+    public int contarVehiculos() {
+        return vehiculoDAO.count();
+    }
+
+    public int contarPorEstado(EstadoVehiculo estado) {
+        return vehiculoDAO.countByEstado(estado);
+    }
+
     private void validarVehiculo(Vehiculo v) throws ValidacionException {
         if (v == null) {
             throw new ValidacionException("El vehículo no puede ser nulo.");

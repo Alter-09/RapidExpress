@@ -8,6 +8,7 @@ import com.RapidExpress.exception.ValidacionException;
 import com.RapidExpress.model.entity.Mantenimiento;
 import com.RapidExpress.model.entity.Vehiculo;
 import com.RapidExpress.model.enums.EstadoVehiculo;
+import com.RapidExpress.model.enums.TipoMantenimiento;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -124,6 +125,16 @@ public class MantenimientoService {
 
     public List<Mantenimiento> listarPorVehiculo(String placa) {
         return mantenimientoDAO.findByVehiculo(placa);
+    }
+
+    public List<Mantenimiento> listarPorFecha(LocalDate fecha) {
+        if (fecha == null) return listarTodos();
+        return mantenimientoDAO.findByFecha(fecha);
+    }
+
+    public List<Mantenimiento> listarPorTipo(TipoMantenimiento tipo) {
+        if (tipo == null) return listarTodos();
+        return mantenimientoDAO.findByTipo(tipo);
     }
 
     public List<Mantenimiento> listarPorRangoFechas(LocalDate inicio, LocalDate fin) {
