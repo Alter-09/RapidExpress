@@ -1,11 +1,12 @@
 package com.RapidExpress.controller;
 
-import com.RapidExpress.dao.ConductorDAO;
-import com.RapidExpress.dao.VehiculoDAO;
+import com.RapidExpress.exception.RapidExpressException;
 import com.RapidExpress.model.entity.Conductor;
 import com.RapidExpress.model.entity.Vehiculo;
 import com.RapidExpress.model.enums.EstadoConductor;
 import com.RapidExpress.model.enums.TipoLicencia;
+import com.RapidExpress.service.ConductorService;
+import com.RapidExpress.service.VehiculoService;
 import com.RapidExpress.view.ConsoleUtil;
 import com.RapidExpress.view.ConductorView;
 import com.RapidExpress.view.VehiculoView;
@@ -14,12 +15,22 @@ import java.util.List;
 
 /**
  * Driver controller - orchestrates driver CRUD, vehicle assignment/release, and filtering.
- * Uses MenuRunner to eliminate boilerplate menu loop.
+ * Connects directly to ConductorService and VehiculoService (Solves Fallo 4, complies with SRP/DIP).
  */
 public class ConductorController {
 
-    private final ConductorDAO dao = new ConductorDAO();
-    private final VehiculoDAO vehiculoDAO = new VehiculoDAO();
+    private final ConductorService conductorService;
+    private final VehiculoService vehiculoService;
+    private static final String DEFAULT_USER = "OPERADOR_CLI";
+
+    public ConductorController() {
+        this(new ConductorService(), new VehiculoService());
+    }
+
+    public ConductorController(ConductorService conductorService, VehiculoService vehiculoService) {
+        this.conductorService = conductorService;
+        this.vehiculoService = vehiculoService;
+    }
 
     public void run() {
         MenuRunner.run(
@@ -43,129 +54,135 @@ public class ConductorController {
         ConsoleUtil.printSubHeader("REGISTRAR NUEVO CONDUCTOR");
         Conductor conductor = ConductorView.readNewConductorData();
         if (conductor != null) {
-            if (dao.create(conductor)) {
-                ConsoleUtil.printSuccess("Conductor registrado exitosamente.");
-            } else {
-                ConsoleUtil.printError("No se pudo registrar el conductor.");
+            try {
+                conductorService.registrarConductor(conductor, DEFAULT_USER);
+                ConsoleUtil.printSuccess("Conductor registrado exitosamente con ID: " + conductor.getNumIdentificacion());
+            } catch (RapidExpressException e) {
+                ConsoleUtil.printError("Error al registrar conductor: " + e.getMessage());
+            } catch (Exception e) {
+                ConsoleUtil.printError("Error inesperado: " + e.getMessage());
             }
         }
     }
 
     private void listarTodos(int opt) {
         ConsoleUtil.printSubHeader("LISTA DE CONDUCTORES");
-        List<Conductor> conductores = dao.findAll();
+        List<Conductor> conductores = conductorService.listarTodos();
         ConductorView.showConductorList(conductores);
     }
 
     private void buscarPorIdentificacion(int opt) {
         ConsoleUtil.printSubHeader("BUSCAR CONDUCTOR POR IDENTIFICACION");
         String id = ConductorView.readIdentificacion("Ingrese el numero de identificacion");
-        dao.findById(id).ifPresentOrElse(
-                ConductorView::showConductorDetail,
-                () -> ConsoleUtil.printError("Conductor no encontrado.")
-        );
+        try {
+            Conductor conductor = conductorService.obtenerConductor(id);
+            ConductorView.showConductorDetail(conductor);
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError(e.getMessage());
+        }
     }
 
     private void actualizarConductor(int opt) {
         ConsoleUtil.printSubHeader("ACTUALIZAR CONDUCTOR");
         String id = ConductorView.readIdentificacion("Ingrese la identificacion del conductor a actualizar");
-        dao.findById(id).ifPresentOrElse(conductor -> {
+        try {
+            Conductor conductor = conductorService.obtenerConductor(id);
+            ConductorView.showConductorDetail(conductor);
             Conductor actualizado = ConductorView.readUpdatedConductorData(conductor);
-            if (dao.update(actualizado)) {
-                ConsoleUtil.printSuccess("Conductor actualizado exitosamente.");
-            } else {
-                ConsoleUtil.printError("No se pudo actualizar el conductor.");
-            }
-        }, () -> ConsoleUtil.printError("Conductor no encontrado."));
+            conductorService.actualizarConductor(actualizado, DEFAULT_USER);
+            ConsoleUtil.printSuccess("Conductor actualizado exitosamente.");
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al actualizar conductor: " + e.getMessage());
+        }
     }
 
     private void cambiarEstado(int opt) {
         ConsoleUtil.printSubHeader("CAMBIAR ESTADO DEL CONDUCTOR");
         String id = ConductorView.readIdentificacion("Ingrese la identificacion");
-        dao.findById(id).ifPresentOrElse(conductor -> {
+        try {
+            Conductor conductor = conductorService.obtenerConductor(id);
             ConductorView.showConductorDetail(conductor);
             EstadoConductor nuevoEstado = ConductorView.readNewEstado();
-            if (dao.updateEstado(id, nuevoEstado)) {
-                ConsoleUtil.printSuccess("Estado actualizado a: " + nuevoEstado);
-            } else {
-                ConsoleUtil.printError("No se pudo actualizar el estado.");
-            }
-        }, () -> ConsoleUtil.printError("Conductor no encontrado."));
+            conductorService.cambiarEstado(id, nuevoEstado, DEFAULT_USER);
+            ConsoleUtil.printSuccess("Estado actualizado a: " + nuevoEstado);
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al cambiar estado: " + e.getMessage());
+        }
     }
 
     private void asignarVehiculo(int opt) {
         ConsoleUtil.printSubHeader("ASIGNAR VEHICULO A CONDUCTOR");
         String id = ConductorView.readIdentificacion("Ingrese la identificacion del conductor");
-        dao.findById(id).ifPresentOrElse(conductor -> {
+        try {
+            Conductor conductor = conductorService.obtenerConductor(id);
             ConductorView.showConductorDetail(conductor);
-            List<Vehiculo> disponibles = vehiculoDAO.findDisponibles();
+            List<Vehiculo> disponibles = vehiculoService.listarDisponibles();
             if (disponibles.isEmpty()) {
                 ConsoleUtil.printError("No hay vehiculos disponibles para asignar.");
                 return;
             }
             VehiculoView.showVehiculoList(disponibles);
             String placa = ConductorView.readVehiculoPlaca();
-            if (dao.asignarVehiculo(id, placa)) {
-                ConductorView.showAsignacionInfo(id, placa);
-            } else {
-                ConsoleUtil.printError("No se pudo asignar el vehiculo.");
-            }
-        }, () -> ConsoleUtil.printError("Conductor no encontrado."));
+            conductorService.asignarVehiculo(id, placa, DEFAULT_USER);
+            ConductorView.showAsignacionInfo(id, placa);
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al asignar vehículo: " + e.getMessage());
+        }
     }
 
     private void liberarVehiculo(int opt) {
         ConsoleUtil.printSubHeader("LIBERAR VEHICULO DE CONDUCTOR");
         String id = ConductorView.readIdentificacion("Ingrese la identificacion del conductor");
-        dao.findById(id).ifPresentOrElse(conductor -> {
+        try {
+            Conductor conductor = conductorService.obtenerConductor(id);
             if (conductor.getVehiculoAsignado() == null) {
                 ConsoleUtil.printInfo("El conductor no tiene vehiculo asignado.");
                 return;
             }
             ConductorView.showConductorDetail(conductor);
-            if (ConsoleUtil.readConfirmation("Liberar vehiculo " + conductor.getVehiculoAsignado() + "?")) {
-                if (dao.liberarVehiculo(id)) {
-                    ConductorView.showLiberacionInfo(id);
-                } else {
-                    ConsoleUtil.printError("No se pudo liberar el vehiculo.");
-                }
+            if (ConsoleUtil.readConfirmation("¿Liberar vehículo " + conductor.getVehiculoAsignado() + "?")) {
+                conductorService.liberarVehiculo(id, DEFAULT_USER);
+                ConductorView.showLiberacionInfo(id);
             }
-        }, () -> ConsoleUtil.printError("Conductor no encontrado."));
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al liberar vehículo: " + e.getMessage());
+        }
     }
 
     private void eliminarConductor(int opt) {
         ConsoleUtil.printSubHeader("ELIMINAR CONDUCTOR");
         String id = ConductorView.readIdentificacion("Ingrese la identificacion del conductor a eliminar");
-        dao.findById(id).ifPresentOrElse(conductor -> {
+        try {
+            Conductor conductor = conductorService.obtenerConductor(id);
             ConductorView.showConductorDetail(conductor);
             if (ConductorView.confirmDelete(id)) {
-                if (dao.delete(id)) {
-                    ConsoleUtil.printSuccess("Conductor eliminado exitosamente.");
-                } else {
-                    ConsoleUtil.printError("No se pudo eliminar el conductor.");
-                }
+                conductorService.eliminarConductor(id, DEFAULT_USER);
+                ConsoleUtil.printSuccess("Conductor eliminado exitosamente.");
             } else {
                 ConsoleUtil.printInfo("Operacion cancelada.");
             }
-        }, () -> ConsoleUtil.printError("Conductor no encontrado."));
+        } catch (RapidExpressException e) {
+            ConsoleUtil.printError("Error al eliminar conductor: " + e.getMessage());
+        }
     }
 
     private void verPorEstado(int opt) {
         ConsoleUtil.printSubHeader("CONDUCTORES POR ESTADO");
         EstadoConductor estado = ConductorView.readNewEstado();
-        List<Conductor> conductores = dao.findByEstado(estado);
+        List<Conductor> conductores = conductorService.listarPorEstado(estado);
         ConductorView.showConductoresByEstado(conductores, estado);
     }
 
     private void verDisponibles(int opt) {
         ConsoleUtil.printSubHeader("CONDUCTORES DISPONIBLES");
-        List<Conductor> conductores = dao.findDisponibles();
+        List<Conductor> conductores = conductorService.listarDisponibles();
         ConductorView.showConductoresDisponibles(conductores);
     }
 
     private void verPorTipoLicencia(int opt) {
         ConsoleUtil.printSubHeader("CONDUCTORES POR TIPO DE LICENCIA");
-        TipoLicencia tipo = ConsoleUtil.readEnum(TipoLicencia.class, "Seleccione el tipo de licencia:");
-        List<Conductor> conductores = dao.findByTipoLicencia(tipo);
+        TipoLicencia tipo = ConductorView.readTipoLicencia();
+        List<Conductor> conductores = conductorService.listarPorTipoLicencia(tipo);
         ConductorView.showConductoresByTipoLicencia(conductores, tipo);
     }
 }
