@@ -2,6 +2,8 @@
 -- MySQL 8.x compatible
 -- ≥20 records per main entity: vehiculo, conductor, paquete, ruta, mantenimiento
 
+USE `RAPIDD`;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 

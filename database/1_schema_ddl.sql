@@ -2,6 +2,9 @@
 -- MySQL 8.x compatible (InnoDB, utf8mb4)
 -- Fixed for CloudBeaver: proper delimiters, order, syntax
 
+CREATE DATABASE IF NOT EXISTS `RAPIDD` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `RAPIDD`;
+
 DELIMITER $$
 
 -- ============================================================
