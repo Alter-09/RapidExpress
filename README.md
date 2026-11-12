@@ -1,3 +1,31 @@
+<!-- README visual refresh -->
+<div align="center">
+
+# 🚚 RapidExpress
+### Fleet · Routes · Parcel operations
+
+**A Java + MySQL command-line management system built around traceable logistics operations.**
+
+[![Java 17](https://img.shields.io/badge/Java-17-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![MySQL 8](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Maven](https://img.shields.io/badge/Maven-3.9+-C71A36?style=flat-square&logo=apachemaven&logoColor=white)](https://maven.apache.org/)
+[![Architecture](https://img.shields.io/badge/Architecture-MVC%20%2B%20DAO%20%2B%20Service-137C78?style=flat-square)](#arquitectura-del-sistema)
+
+</div>
+
+> **Project snapshot** — Manage vehicles and drivers, register parcels, plan routes, track maintenance, and review operational reports with audit records. See the technical sections below for the existing architecture, database model, and setup instructions.
+
+| Core area | Documented capabilities |
+|---|---|
+| Fleet & drivers | Vehicle status, driver availability, and assignment management |
+| Parcels & routes | Parcel lifecycle, route planning, and capacity validation |
+| Maintenance | Preventive/corrective maintenance history and costs |
+| Reporting & audit | Operational reports and traceability records |
+
+**Quick navigation:** [Features](#características-principales) · [Architecture](#arquitectura-del-sistema) · [Database](#diseño-de-la-base-de-datos) · [Setup](#instalación-y-ejecución) · [Project structure](#estructura-del-proyecto)
+
+---
+
 # RapidExpress - Sistema de Gestión de Flotas, Rutas y Paquetería
 
 [![Java](https://img.shields.io/badge/Java-17%20LTS-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
